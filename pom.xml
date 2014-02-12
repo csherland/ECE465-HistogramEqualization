@@ -22,10 +22,10 @@
         <id>mvnrepository</id>
 		<url>http://mvnrepository.com</url>
       </repository>
-      <repository>
+     <repository>
         <id>apache.snapshots</id>
         <url>http://repository.apache.org/snapshots/</url>
-      </repository>
+     </repository>
     </repositories>
 
   <build>
