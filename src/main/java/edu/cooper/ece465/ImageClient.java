@@ -8,7 +8,6 @@ import java.net.*;
 import java.awt.image.*;
 import java.awt.*;
 
-import org.apache.commons.imaging.*;
 
 public class ImageClient {
 
@@ -17,11 +16,6 @@ public class ImageClient {
     }
 
     public static int main(String[] args) {
-
-        final BufferedImage image = Imaging.getBufferedImage(file, null);
-
-        return image;
-
         return 0;
     }
 
