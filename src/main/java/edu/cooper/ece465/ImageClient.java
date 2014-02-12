@@ -7,7 +7,8 @@ package ece465.cooper.edu;
 import java.net.*;
 import java.awt.image.*;
 import java.awt.*;
-import javax.imageio.ImageIO;
+
+import org.apache.commons.*;
 
 public class ImageClient {
     
@@ -15,7 +16,10 @@ public class ImageClient {
         System.out.println("Image Client Initialized.");
     }
 
-    public void manipulateImage(String filename) {
+    public static int main(String[] args) {
+        
+
+        return 0;
     }
 
 }
