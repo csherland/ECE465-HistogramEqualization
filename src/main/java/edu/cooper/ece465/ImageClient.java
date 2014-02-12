@@ -18,6 +18,9 @@ public class ImageClient {
 
     public static int main(String[] args) {
 
+        final BufferedImage image = Imaging.getBufferedImage(file, null);
+
+        return image;
 
         return 0;
     }
