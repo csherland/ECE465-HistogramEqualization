@@ -48,7 +48,7 @@
                   <dependency>hadoop-core</dependency>
                 </classpath>
 -->
-			       <argument>edu.cooper.ece465.KKMultiServer</argument>
+			       <argument>ece465.cooper.edu.KKMultiServer</argument>
           </arguments>
         </configuration>
       </plugin>

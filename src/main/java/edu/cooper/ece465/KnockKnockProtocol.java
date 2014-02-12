@@ -27,8 +27,9 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
+package ece465.cooper.edu;
 import java.net.*;
 import java.io.*;
 
@@ -69,9 +70,9 @@ public class KnockKnockProtocol {
                 theOutput = answers[currentJoke] + " Want another? (y/n)";
                 state = ANOTHER;
             } else {
-                theOutput = "You're supposed to say \"" + 
-			    clues[currentJoke] + 
-			    " who?\"" + 
+                theOutput = "You're supposed to say \"" +
+			    clues[currentJoke] +
+			    " who?\"" +
 			    "! Try again. Knock! Knock!";
                 state = SENTKNOCKKNOCK;
             }
