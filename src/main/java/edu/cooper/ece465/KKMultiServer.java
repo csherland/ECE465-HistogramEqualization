@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
 import java.net.*;
 import java.io.*;
@@ -42,8 +42,8 @@ public class KKMultiServer {
 
         int portNumber = Integer.parseInt(args[0]);
         boolean listening = true;
-        
-        try (ServerSocket serverSocket = new ServerSocket(portNumber)) { 
+
+        try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
             while (listening) {
 	            new KKMultiServerThread(serverSocket.accept()).start();
 	        }

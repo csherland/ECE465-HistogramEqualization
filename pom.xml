@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>edu.cooper.ece465</groupId>
-  <artifactId>javaJourney</artifactId>
+  <artifactId>histogramEqualization</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
@@ -12,8 +12,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <artifactId>javaJourney</artifactId>
-    <name>sjavaJourney</name>
+    <artifactId>histogramEqualization</artifactId>
+    <name>histogramEqualization</name>
 
   </properties>
 
@@ -48,7 +48,7 @@
                   <dependency>hadoop-core</dependency>
                 </classpath>
 -->
-			       <argument>edu.cooper.ece465.ProducerConsumerTest</argument>
+			       <argument>edu.cooper.ece465.KKMultiServer</argument>
           </arguments>
         </configuration>
       </plugin>
