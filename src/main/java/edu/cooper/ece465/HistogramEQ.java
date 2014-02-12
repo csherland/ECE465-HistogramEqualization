@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 public class HistogramEQ {
 
-    public static BufferedImage compute(BufferedImage original) throws IOException {
+    public static BufferedImage equalize(BufferedImage original) throws IOException {
         return histogramEqualization(original);
     }
 
