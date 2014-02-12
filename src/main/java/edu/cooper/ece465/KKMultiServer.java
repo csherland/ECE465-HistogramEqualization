@@ -28,19 +28,14 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+package ece465.cooper.edu; 
 import java.net.*;
 import java.io.*;
 
 public class KKMultiServer {
     public static void main(String[] args) throws IOException {
 
-    if (args.length != 1) {
-        System.err.println("Usage: java KKMultiServer <port number>");
-        System.exit(1);
-    }
-
-        int portNumber = Integer.parseInt(args[0]);
+        int portNumber = 1992;
         boolean listening = true;
 
         try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
