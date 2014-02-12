@@ -2,7 +2,10 @@
  * http://forrst.com/posts/Histogram_equalization_algorithm_in_Java-XmL
  */
 
-private static BufferedImage histogramEqualization(BufferedImage original) {
+package ece465.cooper.edu;
+import java.util.*;
+
+private static BufferedImage HistogramEqualization(BufferedImage original) {
 
     int red;
     int green;
