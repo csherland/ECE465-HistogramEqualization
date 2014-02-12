@@ -28,7 +28,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package ece465.cooper.edu; 
+
+package ece465.cooper.edu;
 import java.net.*;
 import java.io.*;
 
