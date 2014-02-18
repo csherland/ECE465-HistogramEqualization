@@ -16,7 +16,7 @@ public class ImageClient {
         System.out.println("Image Client Initialized.");
     }
 
-    public static int main(String[] args) {
+    public static void main(String[] args) {
 
         /*
          * Connect to flickr
@@ -25,7 +25,9 @@ public class ImageClient {
          */
         String apiKey = "66f8567513744d2afa1019d05be88a17";
         String secret = "30406da39c66d4af";
+        System.out.println("here");
         Flickr f = new Flickr(apiKey, secret, new REST());
+        System.out.println("here2");
 
         /*
          * Get a bunch of images
@@ -42,7 +44,6 @@ public class ImageClient {
          */
 
 
-        return 0;
     }
 
 }
