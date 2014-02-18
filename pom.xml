@@ -54,7 +54,7 @@
                         <argument>-Dlog4j.debug</argument>
                         <argument>-classpath</argument>
                         <classpath/>
-                        <argument>ece465.cooper.edu.KKMultiServer</argument>
+                        <argument>ece465.cooper.edu.ImageClient</argument>
                     </arguments>
                 </configuration>
             </plugin>
