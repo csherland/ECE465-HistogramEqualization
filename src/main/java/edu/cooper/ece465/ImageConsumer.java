@@ -13,18 +13,17 @@ public class ImageConsumer extends Thread {
     }
 
     public void run() {
-        BufferedImage img;
+        BufferedImage img = null;
 
         while (true) {
             img = protocol.getUnequalized();
-            if (protocol.getDoneEqualizing() && img == null) {
+            if (protocol.getDoneEqualizing()) {
                 break;
             }
 
             try {
                 eq.equalize(img);
             } catch (IOException e) {
-                System.out.println("Error equalizing image.");
             }
             System.out.println("Image equalized.");
             protocol.putEqualized(img);

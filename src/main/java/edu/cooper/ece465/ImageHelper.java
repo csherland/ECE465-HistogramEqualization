@@ -11,7 +11,7 @@ public class ImageHelper {
      * is a consumer or a producer */
 
     private boolean doneEqualizing = false;
-    private boolean availableUnequalized = false;
+    private boolean availableUnequalized = true;
     private boolean availableEqualized = false;
 
     public synchronized void setDoneEqualizing(boolean value) {
@@ -27,7 +27,7 @@ public class ImageHelper {
      */
 
     public synchronized BufferedImage getUnequalized() {
-        while (availableUnequalized == false) {
+        while (availableUnequalized) {
             if (doneEqualizing) {
                 return null;
             }
@@ -44,7 +44,7 @@ public class ImageHelper {
     }
 
     public synchronized void putUnequalized(BufferedImage newImage) {
-        while (availableUnequalized == true) {
+        while (!availableUnequalized) {
             try {
                 wait();
             } catch (InterruptedException e) { }
@@ -57,20 +57,7 @@ public class ImageHelper {
     }
 
     public synchronized void putEqualized(BufferedImage newImage) {
-        while (availableEqualized == true) {
-            try {
-                wait();
-            } catch (InterruptedException e) { }
-
-        }
-
-        availableEqualized = false;
-        equalized = newImage;
-        notifyAll();
-    }
-
-    public synchronized BufferedImage getEqualized() {
-        while (availableEqualized == false) {
+        while (availableEqualized) {
             try {
                 wait();
             } catch (InterruptedException e) { }
@@ -78,6 +65,19 @@ public class ImageHelper {
         }
 
         availableEqualized = true;
+        equalized = newImage;
+        notifyAll();
+    }
+
+    public synchronized BufferedImage getEqualized() {
+        while (!availableEqualized) {
+            try {
+                wait();
+            } catch (InterruptedException e) { }
+
+        }
+
+        availableEqualized = false;
         notifyAll();
         return equalized;
     }

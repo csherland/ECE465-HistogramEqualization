@@ -41,5 +41,12 @@ public class ImageProducer extends Thread {
 
         System.out.println("Image put.");
 
+        /*
+        try {
+            File outputFile = new File("output.jpg");
+            ImageIO.write(img, "jpg", outputFile);
+        } catch (IOException e) {
+        }
+        */
     }
 }
