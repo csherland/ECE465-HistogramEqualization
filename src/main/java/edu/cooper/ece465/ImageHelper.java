@@ -64,20 +64,20 @@ public class ImageHelper {
 
         }
 
-        availableEqualized = true;
-        unequalized = newImage;
+        availableEqualized = false;
+        equalized = newImage;
         notifyAll();
     }
 
     public synchronized BufferedImage getEqualized() {
-        while (availableEqualized == true) {
+        while (availableEqualized == false) {
             try {
                 wait();
             } catch (InterruptedException e) { }
 
         }
 
-        availableEqualized = false;
+        availableEqualized = true;
         notifyAll();
         return equalized;
     }
