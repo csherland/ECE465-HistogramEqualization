@@ -27,12 +27,20 @@ public class ImageClient {
         String secret = "30406da39c66d4af";
         Flickr f = new Flickr(apiKey, secret, new REST());
 
+        SearchParameters searchParameters = new SearchParameters();
+        searchParameters.setAccuracy(10);
+        searchParameters.setBBox(minimum_longitude,
+                minimum_latitude,
+                maximum_longitude,
+                maximum_latitude);
+        PhotoList<Photo> list = flickr.getPhotosInterface().search(searchParameters, 0, 0);
+
         /*
          * Get a bunch of images
          */
         Vector<BufferedImage> images = new Vector<BufferedImage>();
-        for (int i = 0; i < 3; ++i) {
-            BufferedImage currentImage = ImageIO.read(Files.newInputStream(Paths.get(basePath + imageSource)));
+        for (int i = 0; i < photos.size(); ++i) {
+            BufferedImage currentImage = photos.get(i).getMediumImage();
             images.add(currentImage);
         }
 
@@ -42,7 +50,6 @@ public class ImageClient {
         int portNumber = 1992;
         String hoseName = "localhost";
         Socket imageSocket = new Socket(hostName, portNumber);
-
         PrintWriter out = new PrintWriter(imageSocket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(imageSocket.getInputStream()));
 
@@ -50,7 +57,7 @@ public class ImageClient {
          * Send images to be equalized
          */
         for (int i = 0; i < images.size(); ++i) {
-
+            ImageIO.write(images.get(i), "JPG", in);
         }
 
         /*
@@ -58,7 +65,7 @@ public class ImageClient {
          * and save to disk
          */
         for (int i = 0; i < images.size(); ++i) {
-            ImageIO.write(equalized, "JPG", out);
+            BufferedImage equalied = ImageIO.read(out);
         }
 
 
