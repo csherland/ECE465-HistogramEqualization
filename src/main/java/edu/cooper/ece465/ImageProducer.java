@@ -30,7 +30,7 @@ public class ImageProducer extends Thread {
         // Read input
         BufferedImage img = null;
         try {
-           img = ImageIO.read(new File("image1.jpg"));
+           img = ImageIO.read(new File("src/main/resources/image1.jpg"));
         } catch (IOException e) {
             System.out.println("Image not found");
         }
