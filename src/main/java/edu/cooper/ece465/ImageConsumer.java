@@ -27,7 +27,7 @@ public class ImageConsumer extends Thread {
                 System.out.println("Error equalizing image.");
             }
             System.out.println("Image equalized.");
-//            protocol.putEqualized(img);
+            protocol.putEqualized(img);
         }
 
     }

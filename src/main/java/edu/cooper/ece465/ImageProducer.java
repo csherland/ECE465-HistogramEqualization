@@ -36,7 +36,7 @@ public class ImageProducer extends Thread {
         }
 
         helper.putUnequalized(img);
-
+        img = helper.getEqualized();
         helper.setDoneEqualizing(true);
 
         System.out.println("Image put.");

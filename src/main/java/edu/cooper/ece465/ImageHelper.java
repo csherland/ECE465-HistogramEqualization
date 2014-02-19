@@ -4,14 +4,15 @@ import java.awt.image.BufferedImage;
 
 public class ImageHelper {
 
-    private BufferedImage image;
+    private BufferedImage unequalized;
+    private BufferedImage equalized;
 
     /* Some flags for determining whether a process
      * is a consumer or a producer */
 
-    private boolean equalized = false;
     private boolean doneEqualizing = false;
     private boolean availableUnequalized = false;
+    private boolean availableEqualized = false;
 
     public synchronized void setDoneEqualizing(boolean value) {
         doneEqualizing = value;
@@ -39,7 +40,7 @@ public class ImageHelper {
 
         availableUnequalized = false;
         notifyAll();
-        return image;
+        return unequalized;
     }
 
     public synchronized void putUnequalized(BufferedImage newImage) {
@@ -50,9 +51,34 @@ public class ImageHelper {
 
         }
 
-        image = newImage;
+        unequalized = newImage;
         availableUnequalized = false;
         notifyAll();
     }
 
+    public synchronized void putEqualized(BufferedImage newImage) {
+        while (availableEqualized == true) {
+            try {
+                wait();
+            } catch (InterruptedException e) { }
+
+        }
+
+        availableEqualized = true;
+        unequalized = newImage;
+        notifyAll();
+    }
+
+    public synchronized BufferedImage getEqualized() {
+        while (availableEqualized == true) {
+            try {
+                wait();
+            } catch (InterruptedException e) { }
+
+        }
+
+        availableEqualized = false;
+        notifyAll();
+        return equalized;
+    }
 }
