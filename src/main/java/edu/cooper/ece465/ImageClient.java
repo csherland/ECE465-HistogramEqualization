@@ -8,7 +8,14 @@ import java.util.*;
 import java.net.*;
 import java.awt.image.*;
 import java.awt.*;
-import com.flickr4java.flickr.*;
+import java.io.*;
+import javax.imageio.ImageIO;
+import com.flickr4java.flickr.Flickr;
+import com.flickr4java.flickr.REST;
+import com.flickr4java.flickr.photos.Photo;
+import com.flickr4java.flickr.photos.PhotoList;
+import com.flickr4java.flickr.photos.PhotosInterface;
+import com.flickr4java.flickr.photos.SearchParameters;
 
 public class ImageClient {
 
@@ -29,35 +36,45 @@ public class ImageClient {
 
         SearchParameters searchParameters = new SearchParameters();
         searchParameters.setAccuracy(10);
-        searchParameters.setBBox(minimum_longitude,
-                minimum_latitude,
-                maximum_longitude,
-                maximum_latitude);
-        PhotoList<Photo> list = flickr.getPhotosInterface().search(searchParameters, 0, 0);
+        PhotoList<Photo> photos = new PhotoList<Photo>();
+        try {
+            photos = f.getPhotosInterface().search(searchParameters, 0, 0);
+        } catch(Exception e) {
+            System.out.println("Could not search for photos");
+        }
 
         /*
-         * Get a bunch of images
+         * Get a bunch of images (1 for now)
          */
         Vector<BufferedImage> images = new Vector<BufferedImage>();
         for (int i = 0; i < photos.size(); ++i) {
-            BufferedImage currentImage = photos.get(i).getMediumImage();
-            images.add(currentImage);
+            //BufferedImage currentImage = photos.get(i).getMediumImage();
+            try {
+                String imageURL = photos.get(i).getUrl();
+                images.add(ImageIO.read(new URL(imageURL)));
+            } catch (Exception e) {
+                System.out.println("could not get image url");
+            }
         }
 
         /*
          * Set up socket connection
          */
         int portNumber = 1992;
-        String hoseName = "localhost";
-        Socket imageSocket = new Socket(hostName, portNumber);
-        PrintWriter out = new PrintWriter(imageSocket.getOutputStream(), true);
-        BufferedReader in = new BufferedReader(new InputStreamReader(imageSocket.getInputStream()));
+        String hostName = "localhost";
+        try {
+            Socket imageSocket = new Socket(hostName, portNumber);
+            PrintWriter out = new PrintWriter(imageSocket.getOutputStream(), true);
+        } catch (Exception e) {
+            System.out.println("error connecting to host");
+        }
+        //BufferedReader in = new BufferedReader(new InputStreamReader(imageSocket.getInputStream()));
 
         /*
          * Send images to be equalized
          */
         for (int i = 0; i < images.size(); ++i) {
-            ImageIO.write(images.get(i), "JPG", in);
+            //ImageIO.write(images.get(i), "JPG", in);
         }
 
         /*
@@ -65,7 +82,7 @@ public class ImageClient {
          * and save to disk
          */
         for (int i = 0; i < images.size(); ++i) {
-            BufferedImage equalied = ImageIO.read(out);
+            //BufferedImage equalized = ImageIO.read(in);
         }
 
 
