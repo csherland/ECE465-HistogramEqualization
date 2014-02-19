@@ -2,11 +2,11 @@ package edu.cooper.ece465;
 import java.util.*;
 
 public class ImageConsumer extends Thread {
-    private ImageProtocol protocol;
+    private ImageHelper protocol;
     private HistorgramEQ eq;
     private int number;
 
-    public ImageConsumer(ImageProtocol protocol) {
+    public ImageConsumer(ImageHelper protocol) {
         this.protocol = protocol;
         this.eq = new HistorgramEQ();
     }
@@ -21,6 +21,7 @@ public class ImageConsumer extends Thread {
             }
 
             eq.equalize(img);
+            System.out.println("Image equalized.");
 //            protocol.putEqualized(img);
         }
 
