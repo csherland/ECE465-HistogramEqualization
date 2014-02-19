@@ -2,9 +2,9 @@ package edu.cooper.ece465;
 import java.util.*;
 
 public class ImageHelper {
-    
+
     private BufferedImage image;
-    
+
     /* Some flags for determining whether a process
      * is a consumer or a producer */
 
@@ -21,20 +21,21 @@ public class ImageHelper {
     }
 
     /* Deals with passing the image between the ImageProducer
-     * and the ImageConsumer. */
+     * and the ImageConsumer.
+     */
 
-    public synchronized BufferedImage getEqualized() {
+    public synchronized BufferedImage getUnequalized() {
         while (availableUnequalized == false) {
             if (doneEqualizing) {
                 return null;
             }
-            
+
             try {
                 wait();
             } catch (InterruptedException e) { }
-            
+
         }
-        
+
         availableUnequalized = false;
         notifyAll();
         return image;
@@ -47,9 +48,10 @@ public class ImageHelper {
             } catch (InterruptedException e) { }
 
         }
-        
+
         image = newImage;
         availableUnequalized = false;
         notifyAll();
     }
+
 }
