@@ -4,14 +4,13 @@
  * Author: Bostjan Cigan (http://zerocool.is-a-geek.net)
  *
  */
-package ece465.cooper.edu;
+package edu.cooper.ece465;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-
 
 public class HistogramEQ {
 

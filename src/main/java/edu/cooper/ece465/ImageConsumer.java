@@ -1,14 +1,15 @@
 package edu.cooper.ece465;
 import java.util.*;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
 
 public class ImageConsumer extends Thread {
     private ImageHelper protocol;
-    private HistorgramEQ eq;
-    private int number;
+    private HistogramEQ eq;
 
     public ImageConsumer(ImageHelper protocol) {
         this.protocol = protocol;
-        this.eq = new HistorgramEQ();
+        this.eq = new HistogramEQ();
     }
 
     public void run() {
@@ -20,7 +21,11 @@ public class ImageConsumer extends Thread {
                 break;
             }
 
-            eq.equalize(img);
+            try {
+                eq.equalize(img);
+            } catch (IOException e) {
+                System.out.println("Error equalizing image.");
+            }
             System.out.println("Image equalized.");
 //            protocol.putEqualized(img);
         }

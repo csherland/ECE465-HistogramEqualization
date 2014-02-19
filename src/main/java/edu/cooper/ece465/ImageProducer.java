@@ -14,6 +14,9 @@
 package edu.cooper.ece465;
 import java.util.*;
 import java.io.*;
+import java.io.File;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 public class ImageProducer extends Thread {
     private ImageHelper helper;

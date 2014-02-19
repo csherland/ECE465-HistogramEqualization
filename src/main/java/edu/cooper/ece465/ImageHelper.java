@@ -1,5 +1,6 @@
 package edu.cooper.ece465;
 import java.util.*;
+import java.awt.image.BufferedImage;
 
 public class ImageHelper {
 
