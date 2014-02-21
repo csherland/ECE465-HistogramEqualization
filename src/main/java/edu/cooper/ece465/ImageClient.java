@@ -1,5 +1,15 @@
 /*
+ * Authors: Christian Sherland
+ *          Ethan Lusterman
+ *          Michael Scibor
+ *
+ * Date:    2/21/14
+ *
  * ImageClient.java
+ *      Takes a set of images and sends them to a
+ *      server that applies histogram equalization.
+ *
+ *      Saves the output in formate "{originalname}_new.jpg"
  *
  */
 
