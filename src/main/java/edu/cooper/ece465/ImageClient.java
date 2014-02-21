@@ -10,12 +10,6 @@ import java.awt.image.*;
 import java.awt.*;
 import java.io.*;
 import javax.imageio.ImageIO;
-import com.flickr4java.flickr.Flickr;
-import com.flickr4java.flickr.REST;
-import com.flickr4java.flickr.photos.Photo;
-import com.flickr4java.flickr.photos.PhotoList;
-import com.flickr4java.flickr.photos.PhotosInterface;
-import com.flickr4java.flickr.photos.SearchParameters;
 
 public class ImageClient {
 
@@ -26,65 +20,69 @@ public class ImageClient {
     public static void main(String[] args) {
 
         /*
-         * Connect to flickr
-         *  TODO: Change the key to be read from properties file and
-         *          add to .gitignore
+         * Get specified images for equalization
+         * TODO:
+         *      - create a good way to specify images
          */
-        String apiKey = "66f8567513744d2afa1019d05be88a17";
-        String secret = "30406da39c66d4af";
-        Flickr f = new Flickr(apiKey, secret, new REST());
-
-        SearchParameters searchParameters = new SearchParameters();
-        searchParameters.setAccuracy(10);
-        PhotoList<Photo> photos = new PhotoList<Photo>();
+        BufferedImage unequalized;
         try {
-            photos = f.getPhotosInterface().search(searchParameters, 0, 0);
-        } catch(Exception e) {
-            System.out.println("Could not search for photos");
+            String imageName = "test1.png";
+            unequalized = ImageIO.read(new File(imageName));
+        } catch (Exception e) {
+            System.out.println("Error reading input image");
         }
 
         /*
-         * Get a bunch of images (1 for now)
-         */
-        Vector<BufferedImage> images = new Vector<BufferedImage>();
-        for (int i = 0; i < photos.size(); ++i) {
-            //BufferedImage currentImage = photos.get(i).getMediumImage();
-            try {
-                String imageURL = photos.get(i).getUrl();
-                images.add(ImageIO.read(new URL(imageURL)));
-            } catch (Exception e) {
-                System.out.println("could not get image url");
-            }
-        }
-
-        /*
-         * Set up socket connection
+         * Get connection from LB to a hist equalization server
+         *
+         * TODO:
+         *      - make this configurable in a properties file
          */
         int portNumber = 1992;
         String hostName = "localhost";
+
         try {
-            Socket imageSocket = new Socket(hostName, portNumber);
-            PrintWriter out = new PrintWriter(imageSocket.getOutputStream(), true);
+            // Setup connection to LB
+            Socket lbSocket = new Socket(hostName, portNumber);
+            InputStream input = lbSocket.getInputStream();
+            ObjectInputStream objectInput = new ObjectInputStream(input);
+
+            // Ask for connection to hist equalization server
+
+            // Close connections that we don't need anymore
+            objectInput.close();
+            input.close();
+            lbSocket.close();
+
         } catch (Exception e) {
-            System.out.println("error connecting to host");
-        }
-        //BufferedReader in = new BufferedReader(new InputStreamReader(imageSocket.getInputStream()));
-
-        /*
-         * Send images to be equalized
-         */
-        for (int i = 0; i < images.size(); ++i) {
-            //ImageIO.write(images.get(i), "JPG", in);
+            System.out.println("Error getting connection to hist equalization server");
         }
 
         /*
-         * Get back equalized images
-         * and save to disk
+         * Connect to histogram equalization server and
+         * send data to be equalized
+         *
          */
-        for (int i = 0; i < images.size(); ++i) {
-            //BufferedImage equalized = ImageIO.read(in);
-        }
+        try {
+            // Setup connection to hist worker
+            Socket histSocket = new Socket(hostName, portNumber);
+            DataInputStream in = new DataInputStream(histSocket.getInputStream());
+            DataOutputStream out = new DataOutputStream(histSocket.getOutputStream());
 
+            //Do work with the pictures
+
+
+            // Close connections we're done with
+            in.close();
+            out.close();
+            histSocket.close();
+
+            // Write equalized images back to disk
+
+
+        } catch (Exception e) {
+            System.out.println("Error communicating with equalization server");
+        }
 
     }
 
