@@ -8,6 +8,15 @@ import java.net.Socket;
 
 public class LoadBalancer {
     public static void main(String[] args){
+
+        // priority queue and hash table and comparator
+        // initialize ServerListener with these
+        // ServerLoadComparator
+        // ServerListener implements Runnable (run method)
+        //
+        // ServerListener
+        // ServerLoadComparator
+
         try {
             ServerSocket serverSocket = new ServerSocket(2014);
             while(true){
