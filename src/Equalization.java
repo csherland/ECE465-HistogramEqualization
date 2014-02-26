@@ -15,9 +15,9 @@ public class Equalization {
         return histogramEqualization(im);
     }
 
-    private static void writeImage(String output) throws IOException {
-        File file = new File(output+".jpg");
-        ImageIO.write(equalized, "jpg", file);
+    public static void writeImage(String output) throws IOException {
+        File file = new File(output+".png");
+        ImageIO.write(equalized, "png", file);
     }
 
     private static BufferedImage histogramEqualization(BufferedImage original) {

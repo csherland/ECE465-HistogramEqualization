@@ -1,5 +1,8 @@
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -10,6 +13,20 @@ import java.net.Socket;
 
 public class Client {
     public static void main(String[] args) {
+
+        // read image
+        BufferedImage uneq = null;
+        BufferedImage eqd = null;
+        String imageName = "img.png";
+        try {
+            uneq = ImageIO.read(new File(imageName));
+            System.out.println("image loaded");
+        } catch (IOException e) {
+            System.out.println("image not loaded");
+            e.printStackTrace();
+        }
+
+        // open socket connection and send data / listen for data
         Socket socket = null;
         try {
             socket = new Socket("localhost", 9999);
@@ -20,7 +37,20 @@ public class Client {
             DataOutputStream output = new DataOutputStream(socket.getOutputStream());
             System.out.println("Output stream open: Client side.");
 
-            output.writeBytes("HELLO\nJust in case.\nJust in case. \n Though, just in case.\n");
+            //output.writeBytes("HELLO\nJust in case.\nJust in case. \n Though, just in case.\n");
+
+            // send img file over socket
+            ImageIO.write(uneq, "PNG", socket.getOutputStream());
+
+            while (true) {
+                eqd = ImageIO.read(socket.getInputStream());
+                if (eqd != null) {
+                    break;
+                }
+            }
+            System.out.println("received eqd image. writing to file...");
+            File file = new File(imageName.substring(0,imageName.length()-4)+"-eq.png");
+            ImageIO.write(eqd, "png", file);
 
             output.close();
             input.close();
