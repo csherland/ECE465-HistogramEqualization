@@ -14,6 +14,7 @@
 .settings/
 target/
 logs/
+out/
 
 .idea
 .DS_Store
