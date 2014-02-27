@@ -15,6 +15,7 @@
 target/
 logs/
 out/
+src/main/
 
 .idea
 .DS_Store
