@@ -1,12 +1,19 @@
+/*
+ * MonitorThread.java
+ *  Responsible for monitoring the state of threads in
+ *  the HistogramServer thread pool. Periodically sends
+ *  load information on performance to the LoadBalancer
+ */
+
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class MyMonitorThread implements Runnable {
+public class MonitorThread implements Runnable {
 
     private ThreadPoolExecutor executor;
     private int seconds;
     private boolean run=true;
 
-    public MyMonitorThread(ThreadPoolExecutor executor, int delay) {
+    public MonitorThread(ThreadPoolExecutor executor, int delay) {
         this.executor = executor;
         this.seconds = delay;
     }
@@ -18,6 +25,7 @@ public class MyMonitorThread implements Runnable {
     @Override
     public void run() {
         while(run){
+            // Locally display information about thread pool
             System.out.println(
                     String.format("[monitor] [%d/%d] Active: %d, Completed: %d, Task: %d, isShutdown: %s, isTerminated: %s",
                         this.executor.getPoolSize(),
@@ -44,6 +52,7 @@ public class MyMonitorThread implements Runnable {
             } catch (Exception e) {
                 System.out.println("Error: could not communicate with master server.");
             }
+
         }
     }
 }

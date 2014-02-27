@@ -1,8 +1,12 @@
+/*
+ * ServerStatus.java
+ *  Serializable information about Histogram servers.
+ *  Allows load balancer to keep track of connected
+ *  servers
+ */
+
 import java.io.Serializable;
 
-/**
- * Created by lusterdome on 2/26/14.
- */
 public class ServerStatus implements Serializable {
     private String hostName;
     private int portNumber;

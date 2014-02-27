@@ -1,5 +1,5 @@
 /*
- * Server.java
+ * HistogramServer.java
  *  An image equalization server. Accepts new socket connections
  *  and performs image equalization on specified data
  */
@@ -10,7 +10,7 @@ import java.util.concurrent.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
-public class Server {
+public class HistogramServer {
     private static final int THREAD_POOL_SIZE = 2;
     private static final int MAX_POOL_SIZE = 4;
     private static final int KEEP_ALIVE_TIME = 5;
@@ -28,7 +28,7 @@ public class Server {
                                                                  threadFactory, rejectionHandler);
 
         //start the monitoring thread
-        MyMonitorThread monitor = new MyMonitorThread(executorPool, 3);
+        MonitorThread monitor = new MonitorThread(executorPool, 3);
         Thread monitorThread = new Thread(monitor);
         monitorThread.start();
 

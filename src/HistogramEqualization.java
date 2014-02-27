@@ -1,3 +1,9 @@
+/*
+ * HistogramEqualization.java
+ *  Applies histogram equalization to a
+ *  specified BufferedImage
+ */
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -5,9 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/* Handles image Equalization. */
-
-public class Equalization {
+public class HistogramEqualization {
 
     private static BufferedImage original, equalized;
 
@@ -57,7 +61,6 @@ public class Equalization {
         }
 
         return histogramEQ;
-
     }
 
     // Get the histogram equalization lookup table for separate R, G, B channels
@@ -113,7 +116,6 @@ public class Equalization {
         imageLUT.add(bhistogram);
 
         return imageLUT;
-
     }
 
     // Return an ArrayList containing histogram values for separate R, G, B channels
@@ -146,7 +148,6 @@ public class Equalization {
         hist.add(bhistogram);
 
         return hist;
-
     }
 
     // Convert R, G, B, Alpha to standard 8 bit
