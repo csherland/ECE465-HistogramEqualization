@@ -38,10 +38,8 @@ public class MonitorThread implements Runnable {
 
             // Talk to master server with current load stats and server status
             try {
-                OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-                double load = osBean.getSystemLoadAverage();
                 Socket socket = new Socket(this.hostname, this.portNumber);
-                WorkerData data = new WorkerData(socket.getLocalAddress().getHostName(), this.clientPortNumber, load);
+                WorkerData data = new WorkerData(socket.getLocalAddress().getHostName(), this.clientPortNumber, 1.0);
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 oos.writeObject(data);
