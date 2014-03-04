@@ -1,4 +1,3 @@
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -7,27 +6,24 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
-/**
- * Created by lusterdome on 2/26/14.
- */
 public class ServerListener implements Runnable {
 
     private PriorityQueue<ServerStatus> queue;
     private HashMap<String, ServerStatus> hashMap;
     private Comparator<ServerStatus> loadComparator = new ServerLoadComparator();
-    private ServerSocket sock;
+    private ServerSocket serverSocket;
 
-    public ServerListener(PriorityQueue<ServerStatus> q, HashMap<String, ServerStatus> hm, int portNumber) throws IOException {
-        this.queue = q;
+    public ServerListener(PriorityQueue<ServerStatus> queue, HashMap<String, ServerStatus> hm, int portNumber) throws IOException {
+        this.queue = queue;
         this.hashMap = hm;
-        this.sock = new ServerSocket(portNumber);
+        this.serverSocket = new ServerSocket(portNumber);
     }
 
     @Override
     public void run() {
         while (true) try {
-            Socket newSock = sock.accept();
-            ObjectInputStream ois = (ObjectInputStream) newSock.getInputStream();
+            Socket socket = serverSocket.accept();
+            ObjectInputStream ois = (ObjectInputStream) socket.getInputStream();
             ServerStatus status = (ServerStatus) ois.readObject();
 
             String key = status.getKey();
@@ -38,9 +34,12 @@ public class ServerListener implements Runnable {
             queue.add(status);
 
             ois.close();
-            newSock.close();
-        } catch (Exception e) {
-            System.out.println("Something went wrong.");
+            socket.close();
+        } catch (ClassNotFoundException e) {
+            System.err.println("ServerListener: run: ClassNotFoundException.");
+        } catch (IOException e) {
+            System.err.println("ServerListener: run: IOException.");
+
         }
     }
 }
