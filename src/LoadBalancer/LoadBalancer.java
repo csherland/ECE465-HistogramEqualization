@@ -5,6 +5,7 @@
  */
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -31,11 +32,19 @@ public class LoadBalancer {
             // Listen for connections from clients and connect them with the best HistogramServer
             ServerSocket serverSocket = new ServerSocket(CLIENT_PORT);
             while(true){
-                System.out.println("New connection from client");
-                Socket socket = serverSocket.accept();
-                queue.poll()
-            }
 
+                Socket socket = serverSocket.accept();
+                ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+                System.out.println("New connection from client.");
+
+                ServerStatus bestServer = queue.remove();
+
+                output.writeObject(bestServer.getHost());
+                output.writeObject(bestServer.getPort());
+
+                output.close();
+                socket.close();
+            }
         } catch (IOException e) {
             System.err.println("Error: Could not listen on port" + CLIENT_PORT);
             System.exit(1);
