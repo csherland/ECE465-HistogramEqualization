@@ -17,21 +17,24 @@ import java.net.UnknownHostException;
 public class ImageClient {
     public static void main(String[] args) {
 
-        if (args.length != 2) {
+        if (args.length != 3) {
             System.err.println(
                     "Usage: java ImageClient <host> <port> <filename>");
             System.exit(1);
         }
 
-        String hostNameServer = null;
+        String loadBalancerName = args[0];
+        int loadBalanacerPort   = Integer.parseInt(args[1]);
+        String imageDirectory   = args[2];
+
+        String hostNameServer    = null;
         Integer portNumberServer = null;
 
-        // First try{}...catch gets a hostName and portNumber to an available Server from LoadBalancer
         try {
-            Socket socket = new Socket(args[0], Integer.parseInt(args[1])); // Open a connection to the LoadBalancer
+            Socket socket = new Socket(loadBalancerName, loadBalanacerPort); // Open a connection to the LoadBalancer
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
-            hostNameServer = (String) input.readObject();
+            hostNameServer   = (String)  input.readObject();
             portNumberServer = (Integer) input.readObject();
 
             input.close();
@@ -48,7 +51,7 @@ public class ImageClient {
         try {
             Socket socket = new Socket(hostNameServer, portNumberServer);
 
-            File[] files = new File("images-unequalized/").listFiles();
+            File[] files = new File(imageDirectory).listFiles();
             BufferedImage[] unequalizedImages = new BufferedImage[files.length];
             BufferedImage[] equalizedImages = new BufferedImage[files.length];
 
@@ -70,7 +73,7 @@ public class ImageClient {
             int imageCount = 1;
             for (BufferedImage equalizedImage : equalizedImages) {
                 equalizedImage = ImageIO.read(socket.getInputStream());
-                File file = new File("images-equalized/" + imageCount + ".png");
+                File file = new File("images-equalized/img-" + imageCount + ".png");
                 ImageIO.write(equalizedImage, "png", file);
                 imageCount++;
             }
