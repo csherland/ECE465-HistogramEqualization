@@ -17,15 +17,16 @@ import java.net.UnknownHostException;
 public class ImageClient {
     public static void main(String[] args) {
 
-        if (args.length != 3) {
+        if (args.length != 4) {
             System.err.println(
-                    "Usage: java ImageClient <host> <port> <filename>");
+                    "Usage: java ImageClient <host> <port> <input directory> <output directory>");
             System.exit(1);
         }
 
         String loadBalancerName = args[0];
         int loadBalanacerPort   = Integer.parseInt(args[1]);
-        String imageDirectory   = args[2];
+        String inputDirectory   = args[2];
+        String outputDirectory  = args[3];
 
         String hostNameServer    = null;
         Integer portNumberServer = null;
@@ -51,7 +52,7 @@ public class ImageClient {
         try {
             Socket socket = new Socket(hostNameServer, portNumberServer);
 
-            File[] files = new File(imageDirectory).listFiles();
+            File[] files = new File(inputDirectory).listFiles();
             BufferedImage[] unequalizedImages = new BufferedImage[files.length];
             BufferedImage[] equalizedImages = new BufferedImage[files.length];
 
@@ -73,7 +74,10 @@ public class ImageClient {
             int imageCount = 1;
             for (BufferedImage equalizedImage : equalizedImages) {
                 equalizedImage = ImageIO.read(socket.getInputStream());
-                File file = new File("images-equalized/img-" + imageCount + ".png");
+                File file = new File(outputDirectory + "/img-" + imageCount + ".png");
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
                 ImageIO.write(equalizedImage, "png", file);
                 imageCount++;
             }
