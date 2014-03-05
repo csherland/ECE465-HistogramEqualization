@@ -7,9 +7,8 @@
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class HistogramWorker implements Runnable {
@@ -24,30 +23,34 @@ public class HistogramWorker implements Runnable {
     // Image equalization
     public void run() {
         try {
-            BufferedImage uneq = null;
-
-            DataInputStream input = new DataInputStream(socket.getInputStream());
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             System.out.println("Input stream open: Server side.");
 
-            DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-            System.out.println("Output stream open: Server side.");
+            Integer imageCount = (Integer) input.readObject();
+            BufferedImage[] unequalizedImages = new BufferedImage[imageCount];
+            BufferedImage[] equalizedImages = new BufferedImage[imageCount];
 
-            while (true) {
-                uneq = ImageIO.read(socket.getInputStream());
-                if (uneq != null) {
-                    break;
-                }
+            for (BufferedImage unequalizedImage : unequalizedImages) {
+                unequalizedImage = ImageIO.read(socket.getInputStream());
+                System.out.println("Received a new image.");
+                // TODO: Spawn new threads for Equalizing images while still receiving new ones
             }
-            System.out.println("received image. equalizing...");
 
-            BufferedImage eqd = HistogramEqualization.computeHistogramEQ(uneq);
-            ImageIO.write(eqd, "PNG", socket.getOutputStream());
+            for (int i = 0; i < unequalizedImages.length; i++) {
+                System.out.println("Equalizing image " + (i+1) + " of " + unequalizedImages.length);
+                equalizedImages[i] = HistogramEqualization.computeHistogramEQ(unequalizedImages[i]);
+            }
 
-            output.close();
+            for (BufferedImage equalizedImage : equalizedImages) {
+                ImageIO.write(equalizedImage, "PNG", socket.getOutputStream());
+            }
+
             input.close();
             socket.close();
         } catch (IOException e) {
             System.out.println("Something went wrong");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

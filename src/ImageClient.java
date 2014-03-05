@@ -10,13 +10,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class ImageClient {
     public static void main(String[] args) {
 
-        if (args.length != 3) {
+        if (args.length != 2) {
             System.err.println(
                     "Usage: java ImageClient <host> <port> <filename>");
             System.exit(1);
@@ -47,21 +48,32 @@ public class ImageClient {
         try {
             Socket socket = new Socket(hostNameServer, portNumberServer);
 
-            BufferedImage unequalized = null;
-            BufferedImage equalized = null;
-            String imageName = args[2];
+            File[] files = new File("images-unequalized/").listFiles();
+            BufferedImage[] unequalizedImages = new BufferedImage[files.length];
+            BufferedImage[] equalizedImages = new BufferedImage[files.length];
 
-            // TODO: Here we can do something with an array of images instead to try to work the Server
-            unequalized = ImageIO.read(new File(imageName));
+            // Instantiate the array of unequalized images
+            for (int i = 0; i < files.length; i++) {
+                unequalizedImages[i] = ImageIO.read(files[i]);
+            }
 
-            // Send image to the Server
-            ImageIO.write(unequalized, "PNG", socket.getOutputStream());
+            // Send the number of images to be processed to the server
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+            output.writeObject(unequalizedImages.length);
 
-            // Wait for equalized image from Server
-            equalized = ImageIO.read(socket.getInputStream());
+            // Send images to the Server
+            for (BufferedImage unequalizedImage : unequalizedImages) {
+                ImageIO.write(unequalizedImage, "PNG", socket.getOutputStream());
+            }
 
-            File file = new File(imageName.substring(0, imageName.length() - 4) + "-eq.png");
-            ImageIO.write(equalized, "png", file); // Write image to file
+            // Wait for equalized images from Server
+            int imageCount = 1;
+            for (BufferedImage equalizedImage : equalizedImages) {
+                equalizedImage = ImageIO.read(socket.getInputStream());
+                File file = new File("images-equalized/" + imageCount + ".png");
+                ImageIO.write(equalizedImage, "png", file);
+                imageCount++;
+            }
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
