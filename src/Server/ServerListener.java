@@ -39,7 +39,6 @@ public class ServerListener implements Runnable {
             System.err.println("ServerListener: run: ClassNotFoundException.");
         } catch (IOException e) {
             System.err.println("ServerListener: run: IOException.");
-
         }
     }
 }

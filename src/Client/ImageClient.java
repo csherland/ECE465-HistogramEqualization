@@ -7,54 +7,58 @@
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ImageClient {
     public static void main(String[] args) {
+        String hostName = null;
+        Integer portNumber = null;
 
-        // read image
-        BufferedImage uneq = null;
-        BufferedImage eqd = null;
-        String imageName = "img.png";
+        // First try{}...catch gets a hostName and portNumber to an available Server from LoadBalancer
         try {
-            uneq = ImageIO.read(new File(imageName));
-            System.out.println("image loaded");
-        } catch (IOException e) {
-            System.out.println("image not loaded");
-            e.printStackTrace();
-        }
+            Socket socket = new Socket("localhost", 2014); // Open a connection to the LoadBalancer
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
-        // open socket connection and send data / listen for data
-        Socket socket = null;
-        try {
-            socket = new Socket("localhost", 9999);
+            hostName = (String) input.readObject();
+            portNumber = (Integer) input.readObject();
 
-            DataInputStream input = new DataInputStream(socket.getInputStream());
-            System.out.println("Input stream open: Client side.");
-
-            DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-            System.out.println("Output stream open: Client side.");
-
-            // send img file over socket
-            ImageIO.write(uneq, "PNG", socket.getOutputStream());
-
-            while (true) {
-                eqd = ImageIO.read(socket.getInputStream());
-                if (eqd != null) {
-                    break;
-                }
-            }
-
-            System.out.println("received eqd image. writing to file...");
-            File file = new File(imageName.substring(0,imageName.length()-4)+"-eq.png");
-            ImageIO.write(eqd, "png", file);
-
-            output.close();
             input.close();
-            socket.close();
+            socket.close(); // Close connection to LoadBalancer after you have retrieved necessary information
         } catch (IOException e) {
             System.out.println("Socket failed to initialize.");
+            System.exit(1);
+        } catch (ClassNotFoundException e) {
+            System.err.println("ImageClient: ClassNotFoundException.");
+            System.exit(1);
+        }
+
+        // Connects to a Server and send the image over for equalization. Then retrieve image.
+        try {
+            Socket socket = new Socket(hostName, portNumber);
+
+            BufferedImage unequalized = null;
+            BufferedImage equalized = null;
+            String imageName = "img.png";
+
+            // TODO: Here we can do something with an array of images instead to try to work the Server
+            unequalized = ImageIO.read(new File(imageName));
+
+            // Send image to the Server
+            ImageIO.write(unequalized, "PNG", socket.getOutputStream());
+
+            // Wait for equalized image from Server
+            equalized = ImageIO.read(socket.getInputStream());
+
+            File file = new File(imageName.substring(0, imageName.length() - 4) + "-eq.png");
+            ImageIO.write(equalized, "png", file); // Write image to file
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

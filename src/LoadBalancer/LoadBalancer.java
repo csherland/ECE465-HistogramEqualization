@@ -33,6 +33,7 @@ public class LoadBalancer {
             while(true){
                 System.out.println("New connection from client");
                 Socket socket = serverSocket.accept();
+                queue.poll()
             }
 
         } catch (IOException e) {
