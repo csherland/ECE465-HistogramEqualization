@@ -18,7 +18,6 @@ public class HistogramServer {
 
     public static void main(String[] args) {
 
-        BufferedImage uneq = null;
 
         // Setup the thread pool
         RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
@@ -41,28 +40,6 @@ public class HistogramServer {
 
                 executorPool.execute(new Worker(1));
 
-                /*
-                DataInputStream input = new DataInputStream(socket.getInputStream());
-                System.out.println("Input stream open: Server side.");
-
-                DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-                System.out.println("Output stream open: Server side.");
-
-                while (true) {
-                    uneq = ImageIO.read(socket.getInputStream());
-                    if (uneq != null) {
-                        break;
-                    }
-                }
-                System.out.println("received image. equalizing...");
-
-                BufferedImage eqd = Equalization.computeHistogramEQ(uneq);
-                ImageIO.write(eqd, "PNG", socket.getOutputStream());
-
-                output.close();
-                input.close();
-                socket.close();
-                */
             }
         } catch (IOException e) {
             System.out.println("ServerSocket not functional.");
