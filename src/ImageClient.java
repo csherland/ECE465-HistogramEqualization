@@ -15,12 +15,19 @@ import java.net.UnknownHostException;
 
 public class ImageClient {
     public static void main(String[] args) {
+
+        if (args.length != 3) {
+            System.err.println(
+                    "Usage: java ImageClient <host> <port> <filename>");
+            System.exit(1);
+        }
+
         String hostNameServer = null;
         Integer portNumberServer = null;
 
         // First try{}...catch gets a hostName and portNumber to an available Server from LoadBalancer
         try {
-            Socket socket = new Socket("localhost", 2014); // Open a connection to the LoadBalancer
+            Socket socket = new Socket(args[0], Integer.parseInt(args[1])); // Open a connection to the LoadBalancer
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
             hostNameServer = (String) input.readObject();
@@ -42,7 +49,7 @@ public class ImageClient {
 
             BufferedImage unequalized = null;
             BufferedImage equalized = null;
-            String imageName = "img.png";
+            String imageName = args[2];
 
             // TODO: Here we can do something with an array of images instead to try to work the Server
             unequalized = ImageIO.read(new File(imageName));

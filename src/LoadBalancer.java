@@ -14,8 +14,14 @@ import java.util.PriorityQueue;
 public class LoadBalancer {
     public static void main(String[] args){
 
+        if (args.length != 2) {
+            System.err.println(
+                    "Usage: java LoadBalancer <client port number> <server port number>");
+            System.exit(1);
+        }
+
         // Listening ports
-        final int CLIENT_PORT = 2014, SERVER_PORT = 9999;
+        final int CLIENT_PORT = Integer.parseInt(args[0]), SERVER_PORT = Integer.parseInt(args[1]);
 
         // Listen for connections from HistogramServers
         PriorityQueue<ServerStatus> queue = new PriorityQueue<ServerStatus>();

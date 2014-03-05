@@ -18,6 +18,16 @@ public class HistogramServer {
 
     public static void main(String[] args) {
 
+        if (args.length != 3) {
+            System.err.println(
+                    "Usage: java HistogramServer <host> <server port> <client port>");
+            System.exit(1);
+        }
+
+        final String HOSTNAME = args[0];
+        final int SERVERPORT = Integer.parseInt(args[1]);
+        final int CLIENTPORT = Integer.parseInt(args[2]);
+
         // Setup the thread pool
         RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
@@ -26,13 +36,13 @@ public class HistogramServer {
                 threadFactory, rejectionHandler);
 
         //start the monitoring thread
-        MonitorThread monitor = new MonitorThread(executorPool, 3, "localhost", 9999, 2015);
+        MonitorThread monitor = new MonitorThread(executorPool, 3, HOSTNAME, SERVERPORT, CLIENTPORT);
         Thread monitorThread = new Thread(monitor);
         monitorThread.start();
 
         // open connection on socket
         try {
-            ServerSocket serverSocket = new ServerSocket(2015);
+            ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[2]));
             while(true) {
                 System.out.println("Waiting for new connections.");
                 Socket socket = serverSocket.accept();
