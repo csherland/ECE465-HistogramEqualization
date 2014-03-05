@@ -23,6 +23,7 @@ public class ImageClient {
             Socket socket = new Socket("localhost", 2014); // Open a connection to the LoadBalancer
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
+
             hostName = (String) input.readObject();
             portNumber = (Integer) input.readObject();
 
