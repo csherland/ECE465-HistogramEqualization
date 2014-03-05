@@ -23,11 +23,11 @@ public class LoadBalancer {
 
         try {
             Runnable listener = new ServerListener(queue, hm, SERVER_PORT);
-            listener.run();
+            (new Thread(listener)).start();
         } catch (IOException e) {
             System.err.println("LoadBalancer: new ServerListener: IOException.");
         }
-
+        System.out.println("Here");
         try {
             // Listen for connections from clients and connect them with the best HistogramServer
             ServerSocket serverSocket = new ServerSocket(CLIENT_PORT);
