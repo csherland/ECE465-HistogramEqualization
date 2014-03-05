@@ -30,8 +30,8 @@ public class HistogramWorker implements Runnable {
             BufferedImage[] unequalizedImages = new BufferedImage[imageCount];
             BufferedImage[] equalizedImages = new BufferedImage[imageCount];
 
-            for (BufferedImage unequalizedImage : unequalizedImages) {
-                unequalizedImage = ImageIO.read(socket.getInputStream());
+            for (int i = 0; i < unequalizedImages.length; i++) {
+                unequalizedImages[i] = ImageIO.read(socket.getInputStream());
                 System.out.println("Received a new image.");
                 // TODO: Spawn new threads for Equalizing images while still receiving new ones
             }
