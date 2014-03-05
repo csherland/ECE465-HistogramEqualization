@@ -18,7 +18,6 @@ public class HistogramServer {
 
     public static void main(String[] args) {
 
-
         // Setup the thread pool
         RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
@@ -27,7 +26,7 @@ public class HistogramServer {
                                                                  threadFactory, rejectionHandler);
 
         //start the monitoring thread
-        MonitorThread monitor = new MonitorThread(executorPool, 3);
+        MonitorThread monitor = new MonitorThread(executorPool, 3, "localhost", 9999, 2014);
         Thread monitorThread = new Thread(monitor);
         monitorThread.start();
 
@@ -38,7 +37,7 @@ public class HistogramServer {
                 System.out.println("Waiting for new connections.");
                 Socket socket = serverSocket.accept();
 
-                executorPool.execute(new Worker(1));
+                executorPool.execute(new HistogramWorker(socket));
 
             }
         } catch (IOException e) {
@@ -46,7 +45,11 @@ public class HistogramServer {
         }
 
         // Shutdown threadpool and monitor
-        Thread.sleep(5000);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         executorPool.shutdown();
         monitor.shutdown();
 

@@ -37,7 +37,7 @@ public class LoadBalancer {
                 ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
                 System.out.println("New connection from client.");
 
-                ServerStatus bestServer = queue.remove();
+                ServerStatus bestServer = queue.peek();
 
                 output.writeObject(bestServer.getHost());
                 output.writeObject(bestServer.getPort());

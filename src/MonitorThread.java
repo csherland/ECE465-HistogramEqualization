@@ -5,6 +5,9 @@
  *  load information on performance to the LoadBalancer
  */
 
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class MonitorThread implements Runnable {
@@ -12,10 +15,16 @@ public class MonitorThread implements Runnable {
     private ThreadPoolExecutor executor;
     private int seconds;
     private boolean run=true;
+    private String hostname;
+    private int portNumber;
+    private int clientPortNumber;
 
-    public MonitorThread(ThreadPoolExecutor executor, int delay) {
+    public MonitorThread(ThreadPoolExecutor executor, int delay, String hostname, int portNumber, int clientPortNumber) {
         this.executor = executor;
         this.seconds = delay;
+        this.hostname = hostname;
+        this.portNumber = portNumber;
+        this.clientPortNumber = clientPortNumber;
     }
 
     public void shutdown(){
@@ -39,7 +48,7 @@ public class MonitorThread implements Runnable {
             // Talk to master server with current load stats and server status
             try {
                 Socket socket = new Socket(this.hostname, this.portNumber);
-                WorkerData data = new WorkerData(socket.getLocalAddress().getHostName(), this.clientPortNumber, 1.0);
+                ServerStatus data = new ServerStatus(socket.getLocalAddress().getHostName(), this.clientPortNumber, 1.0);
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 oos.writeObject(data);
