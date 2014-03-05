@@ -1,4 +1,4 @@
-/*
+;/*
  * HistogramServer.java
  *  An image equalization server. Accepts new socket connections
  *  and performs image equalization on specified data
@@ -22,23 +22,22 @@ public class HistogramServer {
         RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
         ThreadPoolExecutor executorPool = new ThreadPoolExecutor(THREAD_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME,
-                                                                 TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(WORK_QUEUE_SIZE),
-                                                                 threadFactory, rejectionHandler);
+                TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(WORK_QUEUE_SIZE),
+                threadFactory, rejectionHandler);
 
         //start the monitoring thread
-        MonitorThread monitor = new MonitorThread(executorPool, 3, "localhost", 9999, 2014);
+        MonitorThread monitor = new MonitorThread(executorPool, 3, "localhost", 9999, 2015);
         Thread monitorThread = new Thread(monitor);
         monitorThread.start();
 
         // open connection on socket
         try {
-            ServerSocket serverSocket = new ServerSocket(9999);
+            ServerSocket serverSocket = new ServerSocket(2015);
             while(true) {
                 System.out.println("Waiting for new connections.");
                 Socket socket = serverSocket.accept();
 
                 executorPool.execute(new HistogramWorker(socket));
-
             }
         } catch (IOException e) {
             System.out.println("ServerSocket not functional.");

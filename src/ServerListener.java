@@ -23,8 +23,8 @@ public class ServerListener implements Runnable {
     public void run() {
         while (true) try {
             Socket socket = serverSocket.accept();
-            ObjectInputStream ois = (ObjectInputStream) socket.getInputStream();
-            ServerStatus status = (ServerStatus) ois.readObject();
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            ServerStatus status =(ServerStatus) ois.readObject();
 
             String key = status.getKey();
             if (hashMap.containsKey(key)) {
