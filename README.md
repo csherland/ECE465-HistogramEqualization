@@ -28,8 +28,18 @@ In order for this project to function properly, the above profiles should be run
 Configuration
 -------------
 
-Project properties (port numbers, img source, etc.) can be changed in the src/main/resources/project.properties file.
+Project properties (port numbers, img source, etc.) can be changed in the src/main/resources/project.properties file. The properties that this project requires and their descriptions are as follows:
 
+1. Load Balancer
+  - Client port
+  - Host port
+
+2. Histogram Server
+  - Client port
+
+3. Image Client
+  - Image source directory
+  - Image output directory
 
 
 Authors
