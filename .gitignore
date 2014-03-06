@@ -18,7 +18,6 @@
 target/
 logs/
 out/
-src/main/
 
 .DS_Store
 
