@@ -125,7 +125,7 @@
         </profile>
 
         <profile>
-            <id>histServer</id>
+            <id>histogramServer</id>
             <build>
                 <plugins>
                     <plugin>
