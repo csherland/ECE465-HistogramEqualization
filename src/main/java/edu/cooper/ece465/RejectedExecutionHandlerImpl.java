@@ -14,12 +14,16 @@ package edu.cooper.ece465;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class RejectedExecutionHandlerImpl implements RejectedExecutionHandler {
 
+    private static Log LOG = LogFactory.getLog(RejectedExecutionHandlerImpl.class);
+
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-        System.out.println(r.toString() + " is rejected");
+        LOG.debug(r.toString() + " is rejected");
     }
 
 }

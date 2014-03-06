@@ -65,7 +65,7 @@ public class HistogramServer {
                 executorPool.execute(new HistogramWorker(socket));
             }
         } catch (IOException e) {
-            System.out.println("ServerSocket not functional.");
+            LOG.debug("ServerSocket not functional.");
         }
 
         // Shutdown threadpool and monitor

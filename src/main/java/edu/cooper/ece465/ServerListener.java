@@ -19,6 +19,8 @@ package edu.cooper.ece465;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ServerListener implements Runnable {
 
@@ -26,6 +28,7 @@ public class ServerListener implements Runnable {
     private HashMap<String, ServerStatus> hashMap;
     private Comparator<ServerStatus> loadComparator = new ServerLoadComparator();
     private ServerSocket serverSocket;
+    private static Log LOG = LogFactory.getLog(ServerListener.class);
 
     public ServerListener(PriorityQueue<ServerStatus> queue, HashMap<String, ServerStatus> hm, int portNumber) throws IOException {
         this.queue = queue;
@@ -50,9 +53,9 @@ public class ServerListener implements Runnable {
             ois.close();
             socket.close();
         } catch (ClassNotFoundException e) {
-            System.err.println("ServerListener: run: ClassNotFoundException.");
+            LOG.debug("ServerListener: run: ClassNotFoundException.");
         } catch (IOException e) {
-            System.err.println("ServerListener: run: IOException.");
+            LOG.debug("ServerListener: run: IOException.");
         }
     }
 }

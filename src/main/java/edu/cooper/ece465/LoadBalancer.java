@@ -25,8 +25,7 @@ public class LoadBalancer {
     public static void main(String[] args){
 
         if (args.length != 2) {
-            LOG.debug(
-                    "Usage: java LoadBalancer <client port number> <server port number>");
+            LOG.debug("Usage: java LoadBalancer <client port number> <server port number>");
             System.exit(1);
         }
 
@@ -41,7 +40,7 @@ public class LoadBalancer {
             Runnable listener = new ServerListener(queue, hm, SERVER_PORT);
             (new Thread(listener)).start();
         } catch (IOException e) {
-            System.err.println("LoadBalancer: new ServerListener: IOException.");
+            LOG.debug("LoadBalancer: new ServerListener: IOException.");
         }
         try {
             // Listen for connections from clients and connect them with the best HistogramServer
@@ -51,7 +50,7 @@ public class LoadBalancer {
 
                 Socket socket = serverSocket.accept();
                 ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-                System.out.println("New connection from client.");
+                LOG.debug("New connection from client.");
 
                 ServerStatus bestServer = queue.peek();
 
@@ -62,7 +61,7 @@ public class LoadBalancer {
                 socket.close();
             }
         } catch (IOException e) {
-            System.err.println("Error: Could not listen on port" + CLIENT_PORT);
+            LOG.debug("Error: Could not listen on port" + CLIENT_PORT);
             System.exit(1);
         }
     }

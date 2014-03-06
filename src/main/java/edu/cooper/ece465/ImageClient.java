@@ -24,14 +24,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ImageClient {
+
+    private static Log LOG = LogFactory.getLog(ImageClient.class);
 
     public static void main(String[] args) {
 
         if (args.length != 4) {
-            System.err.println(
-                    "Usage: java ImageClient <host> <port> <input directory> <output directory>");
+            LOG.debug("Usage: java ImageClient <host> <port> <input directory> <output directory>");
             System.exit(1);
         }
 
@@ -56,7 +59,7 @@ public class ImageClient {
             System.out.println("Socket failed to initialize.");
             System.exit(1);
         } catch (ClassNotFoundException e) {
-            System.err.println("ImageClient: ClassNotFoundException.");
+            LOG.debug("ImageClient: ClassNotFoundException.");
             System.exit(1);
         }
 

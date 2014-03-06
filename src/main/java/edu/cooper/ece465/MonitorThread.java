@@ -17,6 +17,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.concurrent.ThreadPoolExecutor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class MonitorThread implements Runnable {
 
@@ -26,6 +28,7 @@ public class MonitorThread implements Runnable {
     private String hostname;
     private int portNumber;
     private int clientPortNumber;
+    private static Log LOG = LogFactory.getLog(MonitorThread.class);
 
     public MonitorThread(ThreadPoolExecutor executor, int delay, String hostname, int portNumber, int clientPortNumber) {
         this.executor = executor;
@@ -43,7 +46,7 @@ public class MonitorThread implements Runnable {
     public void run() {
         while(run){
             // Locally display information about thread pool
-            System.out.println(
+            LOG.debug(
                     String.format("[monitor] [%d/%d] Active: %d, Completed: %d, Task: %d, isShutdown: %s, isTerminated: %s",
                         this.executor.getPoolSize(),
                         this.executor.getCorePoolSize(),
@@ -62,10 +65,10 @@ public class MonitorThread implements Runnable {
                 oos.writeObject(data);
                 oos.close();
                 os.close();
-                System.out.println("MyMonitor sent data: " + data.toString());
+                LOG.debug("MyMonitor sent data: " + data.toString());
                 Thread.sleep(seconds*1000);
             } catch (Exception e) {
-                System.out.println("Error: could not communicate with master server.");
+                LOG.debug("Error: could not communicate with master server.");
             }
 
         }
