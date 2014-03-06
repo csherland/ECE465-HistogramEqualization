@@ -5,8 +5,11 @@
 *.war
 *.ear
 
+# Editor files
 *.sublime-project
 *.sublime-workspace
+.idea
+.iml
 
 *.log
 .classpath
@@ -17,7 +20,6 @@ logs/
 out/
 src/main/
 
-.idea
 .DS_Store
 
 # Images
