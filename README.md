@@ -17,7 +17,7 @@ In order to compile and run this project the general syntax is
 
     mvn clean compile exec:exec -P <profile name>
 
-Where profile is any of the following:
+Where <profile name> is any of the following:
 
     1. loadBalancer
     2. histogramServer
