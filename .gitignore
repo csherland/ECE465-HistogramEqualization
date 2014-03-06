@@ -19,3 +19,7 @@ src/main/
 
 .idea
 .DS_Store
+
+# Images
+images-equalized/
+images-unequalized/
