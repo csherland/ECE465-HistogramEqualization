@@ -17,13 +17,13 @@ In order to compile and run this project the general syntax is
 
     mvn clean compile exec:exec -P <profile name>
 
-Where profile is any of the following
+Where profile is any of the following:
 
     1. loadBalancer
     2. histogramServer
     3. imageClient
 
-In order for this project to function properly, the above profiles should be run in that order.
+In order for this project to function properly, the above profiles should be run in that order. That is, a histogram server requires a load balancer to properly function, and an image requirement requires a load balancer and a histogram server to function properly.
 
 Configuration
 -------------
