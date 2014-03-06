@@ -15,7 +15,7 @@ Usage
 
 In order to compile and run this project the general syntax is
 
-mvn clean compile exec:exec -P <profile name>
+    mvn clean compile exec:exec -P <profile name>
 
 Where profile is any of the following:
 
