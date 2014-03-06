@@ -56,8 +56,8 @@
                                 <argument>-classpath</argument>
                                 <classpath/>
                                 <mainClass>edu.cooper.ece465.LoadBalancer</mainClass>
-                                <argument>1999</argument>
-                                <argument>2000</argument>
+                                <argument>${loadBalancer.clientPort}</argument>
+                                <argument>${loadBalancer.serverPort}</argument>
                             </arguments>
                         </configuration>
                     </plugin>
@@ -146,9 +146,9 @@
                                 <argument>-classpath</argument>
                                 <classpath/>
                                 <mainClass>edu.cooper.ece465.HistogramServer</mainClass>
-                                <argument>Localhost</argument>
-                                <argument>1999</argument>
-                                <argument>2000</argument>
+                                <argument>${loadBalancer.hostName}</argument>
+                                <argument>${loadBalancer.serverPort}</argument>
+                                <argument>${histogramServer.clientPort}</argument>
                             </arguments>
                         </configuration>
                     </plugin>
@@ -237,8 +237,8 @@
                                 <argument>-classpath</argument>
                                 <classpath/>
                                 <mainClass>edu.cooper.ece465.ImageClient</mainClass>
-                                <argument>Localhost</argument>
-                                <argument>1999</argument>
+                                <argument>${loadBalancer.hostName}</argument>
+                                <argument>${loadBalancer.clientPort}</argument>
                             </arguments>
                         </configuration>
                     </plugin>
