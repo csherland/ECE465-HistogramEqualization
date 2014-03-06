@@ -9,7 +9,17 @@ Contents
 --------
 
 
+
 Usage
 -----
 
 In order to compile and run this project
+
+
+
+
+Authors
+-------
+- Christian Sherland
+- Ethan Lusterman
+- Michael Scibor
