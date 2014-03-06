@@ -1,10 +1,22 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+/**
+ * ServerListener.java
+ *  A runnable that listens for new histogram server connections
+ *  and stores information on the server within the specified
+ *  priority queue and hashmap.
+ *
+ *  Listens for new histrogram server connections on the port specified
+ *  by portNumber.
+ *
+ *  @author Christian Sherland
+ *  @author Ethan Lusterman
+ *  @author Michael Scibor
+ *
+ *  @version 1.0 Mar 6 2014
+ */
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class ServerListener implements Runnable {
 
