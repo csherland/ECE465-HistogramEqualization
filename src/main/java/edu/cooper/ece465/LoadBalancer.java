@@ -15,12 +15,17 @@ package edu.cooper.ece465;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class LoadBalancer {
+
+    private static Log LOG = LogFactory.getLog(LoadBalancer.class);
+
     public static void main(String[] args){
 
         if (args.length != 2) {
-            System.err.println(
+            LOG.debug(
                     "Usage: java LoadBalancer <client port number> <server port number>");
             System.exit(1);
         }
@@ -38,10 +43,10 @@ public class LoadBalancer {
         } catch (IOException e) {
             System.err.println("LoadBalancer: new ServerListener: IOException.");
         }
-        System.out.println("Here");
         try {
             // Listen for connections from clients and connect them with the best HistogramServer
             ServerSocket serverSocket = new ServerSocket(CLIENT_PORT);
+            LOG.debug("Waiting for new client connections.");
             while(true){
 
                 Socket socket = serverSocket.accept();

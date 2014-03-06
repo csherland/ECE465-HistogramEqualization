@@ -21,18 +21,21 @@ import java.net.*;
 import java.util.concurrent.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 public class HistogramServer {
     private static final int THREAD_POOL_SIZE = 2;
-    private static final int MAX_POOL_SIZE = 4;
-    private static final int KEEP_ALIVE_TIME = 5;
-    private static final int WORK_QUEUE_SIZE = 2;
+    private static final int MAX_POOL_SIZE    = 4;
+    private static final int KEEP_ALIVE_TIME  = 5;
+    private static final int WORK_QUEUE_SIZE  = 2;
+    private static Log LOG = LogFactory.getLog(HistogramServer.class);
 
     public static void main(String[] args) {
 
         if (args.length != 3) {
-            System.err.println(
-                    "Usage: java HistogramServer <load balancer host> <load balancer port> <client port>");
+            LOG.debug("Usage: java HistogramServer <load balancer host> <load balancer port> <client port>");
             System.exit(1);
         }
 
@@ -56,7 +59,7 @@ public class HistogramServer {
         try {
             ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[2]));
             while(true) {
-                System.out.println("Waiting for new connections.");
+                LOG.debug("Waiting for new connections.");
                 Socket socket = serverSocket.accept();
 
                 executorPool.execute(new HistogramWorker(socket));
