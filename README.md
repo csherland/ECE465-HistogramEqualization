@@ -16,6 +16,11 @@ Usage
 In order to compile and run this project
 
 
+Configuration
+-------------
+
+Project properties (port numbers, img source, etc.) can be changed in the src/main/resources/project.properties file.
+
 
 
 Authors
