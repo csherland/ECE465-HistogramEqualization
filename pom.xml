@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <artifactId>histogramEqualization</artifactId>
         <name>histogramEqualization</name>
+        <portNumber>1971</portNumber>
     </properties>
 
     <repositories>
@@ -24,14 +25,6 @@
         <repository>
             <id>apache.snapshots</id>
             <url>http://repository.apache.org/snapshots/</url>
-        </repository>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>bintray</name>
-            <url>http://jcenter.bintray.com</url>
         </repository>
     </repositories>
 
@@ -54,7 +47,7 @@
                         <argument>-Dlog4j.debug</argument>
                         <argument>-classpath</argument>
                         <classpath/>
-                        <argument>edu.cooper.ece465.ImageExample</argument>
+                        <argument>edu.cooper.ece465.concurrent.MyTimerTask</argument>
                     </arguments>
                 </configuration>
             </plugin>
@@ -112,39 +105,51 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
     <dependencies>
         <dependency>
+            <!--  junit dependency -->
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+        <!--  Gson dependency -->
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.2.4</version>
         </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging-api</artifactId>
-            <version>1.1</version>
-        </dependency>
+        <!--  apache commons dependency -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-imaging</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <!--  log4j dependency -->
         <dependency>
-            <groupId>com.flickr4java</groupId>
-            <artifactId>flickr</artifactId>
-            <version>2.5</version>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+        </dependency>
+        <!--  commons-logging dependency -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <!--  commons-logging-api dependency -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+            <version>1.1</version>
         </dependency>
     </dependencies>
 </project>
