@@ -275,6 +275,8 @@
                                 <mainClass>edu.cooper.ece465.ImageClient</mainClass>
                                 <argument>${loadBalancer.hostName}</argument>
                                 <argument>${loadBalancer.clientPort}</argument>
+                                <argument>${imageClient.imageSource}</argument>
+                                <argument>${imageClient.imageOutput}</argument>
                             </arguments>
                         </configuration>
                     </plugin>
