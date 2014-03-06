@@ -1,7 +1,17 @@
-;/*
+/**
  * HistogramServer.java
  *  An image equalization server. Accepts new socket connections
- *  and performs image equalization on specified data
+ *  and performs image equalization on specified data.
+ *
+ *  Command line arguments specify the load balancer host name, the
+ *  port on which to connect to the load balancer and the port to
+ *  listen for connections from clients.
+ *
+ *  @author Christian Sherland
+ *  @author Ethan Lusterman
+ *  @author Michael Scibore
+ *
+ *  @version 1.0 Mar 6 2014
  */
 
 import java.io.*;
@@ -20,13 +30,13 @@ public class HistogramServer {
 
         if (args.length != 3) {
             System.err.println(
-                    "Usage: java HistogramServer <host> <server port> <client port>");
+                    "Usage: java HistogramServer <load balancer host> <load balancer port> <client port>");
             System.exit(1);
         }
 
         final String HOSTNAME = args[0];
-        final int SERVERPORT = Integer.parseInt(args[1]);
-        final int CLIENTPORT = Integer.parseInt(args[2]);
+        final int SERVERPORT  = Integer.parseInt(args[1]);
+        final int CLIENTPORT  = Integer.parseInt(args[2]);
 
         // Setup the thread pool
         RejectedExecutionHandlerImpl rejectionHandler = new RejectedExecutionHandlerImpl();
@@ -35,12 +45,12 @@ public class HistogramServer {
                 TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(WORK_QUEUE_SIZE),
                 threadFactory, rejectionHandler);
 
-        //start the monitoring thread
+        // Start the monitoring thread
         MonitorThread monitor = new MonitorThread(executorPool, 3, HOSTNAME, SERVERPORT, CLIENTPORT);
-        Thread monitorThread = new Thread(monitor);
+        Thread monitorThread  = new Thread(monitor);
         monitorThread.start();
 
-        // open connection on socket
+        // Listen for client connections
         try {
             ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[2]));
             while(true) {

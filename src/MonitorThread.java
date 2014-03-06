@@ -1,8 +1,14 @@
-/*
+/**
  * MonitorThread.java
- *  Responsible for monitoring the state of threads in
- *  the HistogramServer thread pool. Periodically sends
- *  load information on performance to the LoadBalancer
+ *  Responsible for monitoring the state of threads in the
+ *  HistogramServer thread pool. Periodically send load information 
+ *  on performance to the LoadBalancer
+ *
+ *  @author Christian Sherland
+ *  @author Ethan Lusterman
+ *  @author Michael Scibor
+ *
+ *  @version 1.0 Mar 6 2014
  */
 
 import java.io.ObjectOutputStream;

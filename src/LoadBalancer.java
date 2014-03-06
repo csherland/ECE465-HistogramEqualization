@@ -1,15 +1,18 @@
-/*
+/**
  * LoadBalancer.java
  *  Receives requests from Client objects to be connected to an
  *  available Server. Tells the Client which Server is available.
+ *
+ *  @author Christian Sherland
+ *  @author Ethan Lusterman
+ *  @author Michael Scibor
+ *
+ *  @version 1.0 Mar 6 2014
  */
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class LoadBalancer {
     public static void main(String[] args){

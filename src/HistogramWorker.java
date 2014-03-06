@@ -1,8 +1,14 @@
-/*
- *
+/**
  * HistogramWorker.java
- *  Performs equalization on a specified image in a thread
+ *  A worker runnable that accepts image data over a socket and
+ *  performs histogram equalization on incoming data. Returns 
+ *  equalized images over the same socket.
  *
+ *  @author Christian Sherland
+ *  @author Ethan Lusterman
+ *  @author Michael Scibor
+ *
+ *  @version 1.0 Mar 6 2014
  */
 
 import javax.imageio.ImageIO;
@@ -20,7 +26,6 @@ public class HistogramWorker implements Runnable {
         socket = s;
     }
 
-    // Image equalization
     public void run() {
         try {
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());

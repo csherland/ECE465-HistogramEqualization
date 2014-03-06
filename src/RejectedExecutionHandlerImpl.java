@@ -1,7 +1,13 @@
-/*
+/**
  * RejectedExecutionHandlerImpl.java
  *  Simple Implementation of rejection handler for
  *  thread pool in the HistogramServer.
+ *
+ *  @author Christian Sherland
+ *  @author Ethan Lusterman
+ *  @author Michael Scibor
+ *
+ *  @version 1.0 Mar 6 2014
  */
 
 import java.util.concurrent.RejectedExecutionHandler;

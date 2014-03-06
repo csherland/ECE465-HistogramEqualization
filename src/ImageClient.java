@@ -1,8 +1,17 @@
-/*
+/**
  * Client.java
  *  Client objects have images that need to be Equalized: they send a request
  *  to the LoadBalancer for an available Server, which can handle the equalization.
  *  The LoadBalancer then connects the Client to this available Server.
+ *
+ *  Accepts command line arguments to setup connection with a load balancer and
+ *  specify image input source and output location.
+ *
+ *  @author Christian Sherland
+ *  @author Ethan Lusterman
+ *  @author Michael Scibor
+ *
+ *  @version 1.0 Mar 6 2014
  */
 
 import javax.imageio.ImageIO;
@@ -15,6 +24,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class ImageClient {
+
     public static void main(String[] args) {
 
         if (args.length != 4) {

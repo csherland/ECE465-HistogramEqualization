@@ -1,7 +1,7 @@
-/*
- * HistogramEqualization.java
- *  Applies histogram equalization to a
- *  specified BufferedImage
+/**
+ *  HistogramEqualization.java
+ *      Used to apply histogram equalization to a specified BufferedImage
+ *      Found online at:
  */
 
 import javax.imageio.ImageIO;
