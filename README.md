@@ -8,13 +8,22 @@ Features an application layer load balancer to determine the best server for a c
 Contents
 --------
 
-
+The contents of this project are divided into 3 separate entities - the image client, the load balancer and the histogram server. All of these are meant to run simultaneously and communicate through sockets. These processes can be run on the same machine or across a network if configure properly.
 
 Usage
 -----
 
-In order to compile and run this project
+In order to compile and run this project the general syntax is
 
+    mvn clean compile exec:exec -P <profile name>
+
+Where profile is any of the following
+
+    1. loadBalancer
+    2. histogramServer
+    3. imageClient
+
+In order for this project to function properly, the above profiles should be run in that order.
 
 Configuration
 -------------
