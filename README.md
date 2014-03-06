@@ -15,7 +15,7 @@ Usage
 
 In order to compile and run this project the general syntax is
 
-    mvn clean compile exec:exec -P <profile name>
+mvn clean compile exec:exec -P <profile name>
 
 Where profile is any of the following:
 
@@ -30,16 +30,14 @@ Configuration
 
 Project properties (port numbers, img source, etc.) can be changed in the src/main/resources/project.properties file. The properties that this project requires and their descriptions are as follows:
 
-1. Load Balancer
-  - Client port
-  - Host port
-
-2. Histogram Server
-  - Client port
-
-3. Image Client
-  - Image source directory
-  - Image output directory
+    1. Load Balancer
+        - Client port
+        - Host port
+    2. Histogram Server
+        - Client port
+    3. Image Client
+        - Image source directory
+        - Image output directory
 
 
 Authors
