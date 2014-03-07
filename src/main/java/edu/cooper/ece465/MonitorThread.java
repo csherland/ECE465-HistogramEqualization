@@ -31,6 +31,7 @@ public class MonitorThread implements Runnable {
     private static Log LOG = LogFactory.getLog(MonitorThread.class);
 
     public MonitorThread(ThreadPoolExecutor executor, int delay, String hostname, int portNumber, int clientPortNumber) {
+        LOG.info("Spawning new monitor thread");
         this.executor = executor;
         this.seconds = delay;
         this.hostname = hostname;
@@ -39,6 +40,7 @@ public class MonitorThread implements Runnable {
     }
 
     public void shutdown(){
+        LOG.info("Shutting down monitor thread");
         this.run=false;
     }
 
@@ -46,7 +48,7 @@ public class MonitorThread implements Runnable {
     public void run() {
         while(run){
             // Locally display information about thread pool
-            LOG.debug(
+            LOG.info(
                     String.format("[monitor] [%d/%d] Active: %d, Completed: %d, Task: %d, isShutdown: %s, isTerminated: %s",
                         this.executor.getPoolSize(),
                         this.executor.getCorePoolSize(),
@@ -65,10 +67,10 @@ public class MonitorThread implements Runnable {
                 oos.writeObject(data);
                 oos.close();
                 os.close();
-                LOG.debug("MyMonitor sent data: " + data.toString());
+                LOG.info("MyMonitor sent data: " + data.toString());
                 Thread.sleep(seconds*1000);
             } catch (Exception e) {
-                LOG.debug("Error: could not communicate with master server.");
+                LOG.error("Error: could not communicate with master server.", e);
             }
 
         }

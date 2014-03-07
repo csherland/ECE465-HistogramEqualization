@@ -34,7 +34,7 @@ public class ImageClient {
     public static void main(String[] args) {
 
         if (args.length != 4) {
-            LOG.debug("Usage: java ImageClient <host> <port> <input directory> <output directory>");
+            LOG.fatal("Usage: java ImageClient <host> <port> <input directory> <output directory>");
             System.exit(1);
         }
 
@@ -56,10 +56,10 @@ public class ImageClient {
             input.close();
             socket.close(); // Close connection to LoadBalancer after you have retrieved necessary information
         } catch (IOException e) {
-            System.out.println("Socket failed to initialize.");
+            LOG.fatal("Socket failed to initialize.");
             System.exit(1);
         } catch (ClassNotFoundException e) {
-            LOG.debug("ImageClient: ClassNotFoundException.");
+            LOG.error("ClassNotFoundException.", e);
             System.exit(1);
         }
 
@@ -97,9 +97,9 @@ public class ImageClient {
                 imageCount++;
             }
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            LOG.fatal("Unknown host", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.fatal("IO exception", e);
         }
     }
 

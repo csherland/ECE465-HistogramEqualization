@@ -31,6 +31,7 @@ public class ServerListener implements Runnable {
     private static Log LOG = LogFactory.getLog(ServerListener.class);
 
     public ServerListener(PriorityQueue<ServerStatus> queue, HashMap<String, ServerStatus> hm, int portNumber) throws IOException {
+        LOG.info("Creating new server listener");
         this.queue = queue;
         this.hashMap = hm;
         this.serverSocket = new ServerSocket(portNumber);
@@ -53,9 +54,9 @@ public class ServerListener implements Runnable {
             ois.close();
             socket.close();
         } catch (ClassNotFoundException e) {
-            LOG.debug("ServerListener: run: ClassNotFoundException.");
+            LOG.error("Class not found", e);
         } catch (IOException e) {
-            LOG.debug("ServerListener: run: IOException.");
+            LOG.error("IO Exception", e);
         }
     }
 }

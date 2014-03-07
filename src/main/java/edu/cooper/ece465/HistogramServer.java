@@ -35,7 +35,7 @@ public class HistogramServer {
     public static void main(String[] args) {
 
         if (args.length != 3) {
-            LOG.debug("Usage: java HistogramServer <load balancer host> <load balancer port> <client port>");
+            LOG.fatal("Usage: java HistogramServer <load balancer host> <load balancer port> <client port>");
             System.exit(1);
         }
 
@@ -59,20 +59,20 @@ public class HistogramServer {
         try {
             ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[2]));
             while(true) {
-                LOG.debug("Waiting for new connections.");
+                LOG.info("Waiting for new connections.");
                 Socket socket = serverSocket.accept();
 
                 executorPool.execute(new HistogramWorker(socket));
             }
         } catch (IOException e) {
-            LOG.debug("ServerSocket not functional.");
+            LOG.fatal("ServerSocket not functional.");
         }
 
         // Shutdown threadpool and monitor
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error("Thread sleep error.", e);
         }
         executorPool.shutdown();
         monitor.shutdown();

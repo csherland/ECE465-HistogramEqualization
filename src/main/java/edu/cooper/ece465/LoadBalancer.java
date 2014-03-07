@@ -25,12 +25,13 @@ public class LoadBalancer {
     public static void main(String[] args){
 
         if (args.length != 2) {
-            LOG.debug("Usage: java LoadBalancer <client port number> <server port number>");
+            LOG.fatal("Usage: java LoadBalancer <client port number> <server port number>");
             System.exit(1);
         }
 
         // Listening ports
-        final int CLIENT_PORT = Integer.parseInt(args[0]), SERVER_PORT = Integer.parseInt(args[1]);
+        final int CLIENT_PORT = Integer.parseInt(args[0]);
+        final int SERVER_PORT = Integer.parseInt(args[1]);
 
         // Listen for connections from HistogramServers
         PriorityQueue<ServerStatus> queue = new PriorityQueue<ServerStatus>();
@@ -40,17 +41,19 @@ public class LoadBalancer {
             Runnable listener = new ServerListener(queue, hm, SERVER_PORT);
             (new Thread(listener)).start();
         } catch (IOException e) {
-            LOG.debug("LoadBalancer: new ServerListener: IOException.");
+            LOG.fatal("Could not create listener", e);
+            System.exit(1);
         }
+
         try {
             // Listen for connections from clients and connect them with the best HistogramServer
             ServerSocket serverSocket = new ServerSocket(CLIENT_PORT);
-            LOG.debug("Waiting for new client connections.");
+            LOG.info("Waiting for new client connections.");
             while(true){
 
                 Socket socket = serverSocket.accept();
                 ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-                LOG.debug("New connection from client.");
+                LOG.info("New connection from client.");
 
                 ServerStatus bestServer = queue.peek();
 
@@ -61,7 +64,7 @@ public class LoadBalancer {
                 socket.close();
             }
         } catch (IOException e) {
-            LOG.debug("Error: Could not listen on port" + CLIENT_PORT);
+            LOG.fatal("Error: Could not listen on port" + CLIENT_PORT, e);
             System.exit(1);
         }
     }

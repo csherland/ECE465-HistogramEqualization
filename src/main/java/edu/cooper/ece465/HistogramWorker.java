@@ -27,14 +27,14 @@ public class HistogramWorker implements Runnable {
     private static Log LOG = LogFactory.getLog(HistogramWorker.class);
 
     public HistogramWorker(Socket s) {
-        System.out.println("New histogram worker spawned");
+        LOG.info("New histogram worker spawned");
         socket = s;
     }
 
     public void run() {
         try {
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-            LOG.debug("Input stream open: Server side.");
+            LOG.info("Input stream open: Server side.");
 
             Integer imageCount = (Integer) input.readObject();
             BufferedImage[] unequalizedImages = new BufferedImage[imageCount];
@@ -42,12 +42,12 @@ public class HistogramWorker implements Runnable {
 
             for (int i = 0; i < unequalizedImages.length; i++) {
                 unequalizedImages[i] = ImageIO.read(socket.getInputStream());
-                LOG.debug("Received a new image.");
+                LOG.info("Received a new image.");
                 // TODO: Spawn new threads for Equalizing images while still receiving new ones
             }
 
             for (int i = 0; i < unequalizedImages.length; i++) {
-                LOG.debug("Equalizing image " + (i+1) + " of " + unequalizedImages.length);
+                LOG.info("Equalizing image " + (i+1) + " of " + unequalizedImages.length);
                 equalizedImages[i] = HistogramEqualization.computeHistogramEQ(unequalizedImages[i]);
             }
 
@@ -58,9 +58,9 @@ public class HistogramWorker implements Runnable {
             input.close();
             socket.close();
         } catch (IOException e) {
-            LOG.debug("Something went wrong");
+            LOG.error("IO Exception", e);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOG.error("Class not found error", e);
         }
     }
 

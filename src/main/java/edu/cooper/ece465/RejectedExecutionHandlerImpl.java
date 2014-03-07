@@ -23,7 +23,7 @@ public class RejectedExecutionHandlerImpl implements RejectedExecutionHandler {
 
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-        LOG.debug(r.toString() + " is rejected");
+        LOG.info(r.toString() + " is rejected");
     }
 
 }
