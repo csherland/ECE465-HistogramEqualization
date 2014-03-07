@@ -57,7 +57,7 @@ public class HistogramServer {
 
         // Listen for client connections
         try {
-            ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[2]));
+            ServerSocket serverSocket = new ServerSocket(CLIENTPORT);
             while(true) {
                 LOG.info("Waiting for new connections.");
                 Socket socket = serverSocket.accept();

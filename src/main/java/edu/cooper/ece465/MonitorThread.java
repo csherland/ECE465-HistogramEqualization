@@ -15,7 +15,7 @@ package edu.cooper.ece465;
 
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.net.Socket;
+import java.net.*;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,7 +41,7 @@ public class MonitorThread implements Runnable {
 
     public void shutdown(){
         LOG.info("Shutting down monitor thread");
-        this.run=false;
+        this.run = false;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class MonitorThread implements Runnable {
 
             // Talk to master server with current load stats and server status
             try {
-                Socket socket = new Socket(this.hostname, this.portNumber);
+                Socket socket = new Socket(InetAddress.getByName(this.hostname), this.portNumber);
                 ServerStatus data = new ServerStatus(socket.getLocalAddress().getHostName(), this.clientPortNumber, 1.0);
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
