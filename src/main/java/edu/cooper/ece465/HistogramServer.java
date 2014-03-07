@@ -58,9 +58,10 @@ public class HistogramServer {
         // Listen for client connections
         try {
             ServerSocket serverSocket = new ServerSocket(CLIENTPORT);
+            LOG.info("Listening for new client connections.");
             while(true) {
-                LOG.info("Waiting for new connections.");
                 Socket socket = serverSocket.accept();
+                LOG.info("Accepted new client connection.");
 
                 executorPool.execute(new HistogramWorker(socket));
             }
@@ -77,5 +78,6 @@ public class HistogramServer {
         executorPool.shutdown();
         monitor.shutdown();
 
+        LOG.info("Histogram server shut down.");
     }
 }

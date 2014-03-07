@@ -48,7 +48,7 @@ public class LoadBalancer {
         try {
             // Listen for connections from clients and connect them with the best HistogramServer
             ServerSocket serverSocket = new ServerSocket(CLIENT_PORT);
-            LOG.info("Waiting for new client connections.");
+            LOG.info("Listening for new client connections on port: "+ CLIENT_PORT);
             while(true){
 
                 Socket socket = serverSocket.accept();

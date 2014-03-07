@@ -34,16 +34,15 @@ public class HistogramWorker implements Runnable {
     public void run() {
         try {
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-            LOG.info("Input stream open: Server side.");
+            LOG.info("Reading images from client.");
 
             Integer imageCount = (Integer) input.readObject();
             BufferedImage[] unequalizedImages = new BufferedImage[imageCount];
             BufferedImage[] equalizedImages = new BufferedImage[imageCount];
 
             for (int i = 0; i < unequalizedImages.length; i++) {
-                unequalizedImages[i] = ImageIO.read(socket.getInputStream());
                 LOG.info("Received a new image.");
-                // TODO: Spawn new threads for Equalizing images while still receiving new ones
+                unequalizedImages[i] = ImageIO.read(socket.getInputStream());
             }
 
             for (int i = 0; i < unequalizedImages.length; i++) {
@@ -62,6 +61,8 @@ public class HistogramWorker implements Runnable {
         } catch (ClassNotFoundException e) {
             LOG.error("Class not found error", e);
         }
+
+        LOG.info("Finished equalizing images.");
     }
 
 }

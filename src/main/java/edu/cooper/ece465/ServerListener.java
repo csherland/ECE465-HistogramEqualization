@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class ServerListener implements Runnable {
 
+    private int port;
     private PriorityQueue<ServerStatus> queue;
     private HashMap<String, ServerStatus> hashMap;
     private Comparator<ServerStatus> loadComparator = new ServerLoadComparator();
@@ -31,16 +32,20 @@ public class ServerListener implements Runnable {
     private static Log LOG = LogFactory.getLog(ServerListener.class);
 
     public ServerListener(PriorityQueue<ServerStatus> queue, HashMap<String, ServerStatus> hm, int portNumber) throws IOException {
-        LOG.info("Creating new server listener");
+        LOG.info("Creating new server listener.");
         this.queue = queue;
         this.hashMap = hm;
+        this.port = portNumber;
         this.serverSocket = new ServerSocket(portNumber);
     }
 
     @Override
     public void run() {
+        LOG.info("Listening for new server connections on port: " + port);
         while (true) try {
             Socket socket = serverSocket.accept();
+            LOG.info("New connection from histogram server");
+
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             ServerStatus status =(ServerStatus) ois.readObject();
 

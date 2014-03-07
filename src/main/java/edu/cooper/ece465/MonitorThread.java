@@ -24,23 +24,23 @@ public class MonitorThread implements Runnable {
 
     private ThreadPoolExecutor executor;
     private int seconds;
-    private boolean run=true;
-    private String hostname;
     private int portNumber;
     private int clientPortNumber;
+    private String hostname;
+    private boolean run = true;
     private static Log LOG = LogFactory.getLog(MonitorThread.class);
 
     public MonitorThread(ThreadPoolExecutor executor, int delay, String hostname, int portNumber, int clientPortNumber) {
-        LOG.info("Spawning new monitor thread");
+        LOG.info("Spawning new monitor thread.");
         this.executor = executor;
-        this.seconds = delay;
+        this.seconds  = delay;
         this.hostname = hostname;
         this.portNumber = portNumber;
         this.clientPortNumber = clientPortNumber;
     }
 
     public void shutdown(){
-        LOG.info("Shutting down monitor thread");
+        LOG.info("Shutting down monitor thread.");
         this.run = false;
     }
 
@@ -60,6 +60,7 @@ public class MonitorThread implements Runnable {
 
             // Talk to master server with current load stats and server status
             try {
+                LOG.info("Sending data to load balancer: " + hostname + " on port: " + portNumber);
                 Socket socket = new Socket(InetAddress.getByName(this.hostname), this.portNumber);
                 ServerStatus data = new ServerStatus(socket.getLocalAddress().getHostName(), this.clientPortNumber, 1.0);
                 OutputStream os = socket.getOutputStream();
@@ -70,7 +71,7 @@ public class MonitorThread implements Runnable {
                 LOG.info("MyMonitor sent data: " + data.toString());
                 Thread.sleep(seconds*1000);
             } catch (Exception e) {
-                LOG.error("Error: could not communicate with master server.", e);
+                LOG.error("Could not communicate with master server.", e);
             }
 
         }

@@ -38,20 +38,26 @@ public class ImageClient {
             System.exit(1);
         }
 
-        String loadBalancerName = args[0];
-        int loadBalanacerPort   = Integer.parseInt(args[1]);
-        String inputDirectory   = args[2];
-        String outputDirectory  = args[3];
+        final String LOAD_BALANCER_NAME = args[0];
+        final int LOAD_BALANCER_PORT    = Integer.parseInt(args[1]);
+        final String INPUT_DIRECTORY    = args[2];
+        final String OUTPUT_DIRECTORY   = args[3];
 
-        String hostNameServer    = null;
-        Integer portNumberServer = null;
+        LOG.info("Image client running with load balancer name:\t " + LOAD_BALANCER_NAME + "\n\t\t port: "
+                                                                  + LOAD_BALANCER_PORT + "\n\t\t input dir: "
+                                                                  + INPUT_DIRECTORY + "\n\t\t output dir: "
+                                                                  + OUTPUT_DIRECTORY);
+
+        String  histServerName = null;
+        Integer histServerPort = null;
 
         try {
-            Socket socket = new Socket(loadBalancerName, loadBalanacerPort); // Open a connection to the LoadBalancer
+            LOG.info("Getting server assignment from load balancer.");
+            Socket socket = new Socket(LOAD_BALANCER_NAME, LOAD_BALANCER_PORT); // Open a connection to the LoadBalancer
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
-            hostNameServer   = (String)  input.readObject();
-            portNumberServer = (Integer) input.readObject();
+            histServerName = (String)  input.readObject();
+            histServerPort = (Integer) input.readObject();
 
             input.close();
             socket.close(); // Close connection to LoadBalancer after you have retrieved necessary information
@@ -65,13 +71,15 @@ public class ImageClient {
 
         // Connects to a Server and send the image over for equalization. Then retrieve image.
         try {
-            Socket socket = new Socket(hostNameServer, portNumberServer);
+            LOG.info("Connecting to histogram server: " + histServerName + "on port: " + histServerPort);
+            Socket socket = new Socket(histServerName, histServerPort);
 
-            File[] files = new File(inputDirectory).listFiles();
+            File[] files = new File(INPUT_DIRECTORY).listFiles();
             BufferedImage[] unequalizedImages = new BufferedImage[files.length];
-            BufferedImage[] equalizedImages = new BufferedImage[files.length];
+            BufferedImage[] equalizedImages   = new BufferedImage[files.length];
 
             // Instantiate the array of unequalized images
+            LOG.info("Reading " + files.length + " image files from directory:" + INPUT_DIRECTORY);
             for (int i = 0; i < files.length; i++) {
                 unequalizedImages[i] = ImageIO.read(files[i]);
             }
@@ -81,26 +89,37 @@ public class ImageClient {
             output.writeObject(unequalizedImages.length);
 
             // Send images to the Server
+            LOG.info("Sending images to histogram server: " + histServerName + "on port: " + histServerPort);
             for (BufferedImage unequalizedImage : unequalizedImages) {
                 ImageIO.write(unequalizedImage, "PNG", socket.getOutputStream());
             }
 
             // Wait for equalized images from Server
+            LOG.info("Waiting for equalized images.");
             int imageCount = 1;
             for (BufferedImage equalizedImage : equalizedImages) {
+                LOG.info("Received image " + imageCount + " of " + equalizedImages.length);
                 equalizedImage = ImageIO.read(socket.getInputStream());
-                File file = new File(outputDirectory + "/img-" + imageCount + ".png");
+
+                File file = new File(OUTPUT_DIRECTORY + "/img-" + imageCount + ".png");
                 if (!file.exists()) {
                     file.createNewFile();
                 }
+
                 ImageIO.write(equalizedImage, "png", file);
                 imageCount++;
             }
         } catch (UnknownHostException e) {
             LOG.fatal("Unknown host", e);
+            System.exit(1);
         } catch (IOException e) {
             LOG.fatal("IO exception", e);
+            System.exit(1);
+        } catch (Exception e) {
+            LOG.fatal("Unknown exception", e);
+            System.exit(1);
         }
-    }
 
+        LOG.info("Received all equalized images and saved output to directory: " + OUTPUT_DIRECTORY);
+    }
 }
