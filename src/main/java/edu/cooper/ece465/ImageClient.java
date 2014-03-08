@@ -18,16 +18,31 @@ package edu.cooper.ece465;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class ImageClient {
+
+    // array of supported extensions (use a List if you prefer)
+    static final String[] EXTENSIONS = new String[]{
+        "png", "jpg"
+    };
+
+    // filter to identify images based on their extensions
+    static final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
+        @Override
+        public boolean accept(final File dir, final String name) {
+            for (final String ext : EXTENSIONS) {
+                if (name.endsWith("." + ext)) {
+                    return (true);
+                }
+            }
+            return (false);
+        }
+    };
 
     private static Log LOG = LogFactory.getLog(ImageClient.class);
 
@@ -74,7 +89,7 @@ public class ImageClient {
             LOG.info("Connecting to histogram server: " + histServerName + "on port: " + histServerPort);
             Socket socket = new Socket(histServerName, histServerPort);
 
-            File[] files = new File(INPUT_DIRECTORY).listFiles();
+            File[] files = new File(INPUT_DIRECTORY).listFiles(IMAGE_FILTER);
             BufferedImage[] unequalizedImages = new BufferedImage[files.length];
             BufferedImage[] equalizedImages   = new BufferedImage[files.length];
 
@@ -89,7 +104,7 @@ public class ImageClient {
             output.writeObject(unequalizedImages.length);
 
             // Send images to the Server
-            LOG.info("Sending images to histogram server: " + histServerName + "on port: " + histServerPort);
+            LOG.info("Sending images to histogram server: " + histServerName + " on port: " + histServerPort);
             for (BufferedImage unequalizedImage : unequalizedImages) {
                 ImageIO.write(unequalizedImage, "PNG", socket.getOutputStream());
             }

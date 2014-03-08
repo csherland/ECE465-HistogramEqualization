@@ -41,19 +41,19 @@ public class HistogramEqualization {
 
         BufferedImage histogramEQ = new BufferedImage(original.getWidth(), original.getHeight(), original.getType());
 
-        for(int i=0; i<original.getWidth(); i++) {
-            for(int j=0; j<original.getHeight(); j++) {
+        for(int i = 0; i < original.getWidth(); i++) {
+            for(int j = 0; j < original.getHeight(); j++) {
 
                 // Get pixels by R, G, B
                 alpha = new Color(original.getRGB (i, j)).getAlpha();
-                red = new Color(original.getRGB (i, j)).getRed();
+                red   = new Color(original.getRGB (i, j)).getRed();
                 green = new Color(original.getRGB (i, j)).getGreen();
-                blue = new Color(original.getRGB (i, j)).getBlue();
+                blue  = new Color(original.getRGB (i, j)).getBlue();
 
                 // Set new pixel values using the histogram lookup table
-                red = histLUT.get(0)[red];
+                red   = histLUT.get(0)[red];
                 green = histLUT.get(1)[green];
-                blue = histLUT.get(2)[blue];
+                blue  = histLUT.get(2)[blue];
 
                 // Return back to original format
                 newPixel = colorToRGB(alpha, red, green, blue);
