@@ -26,12 +26,12 @@ import org.apache.commons.logging.LogFactory;
 
 public class ImageClient {
 
-    // array of supported extensions (use a List if you prefer)
+    // Array of supported image extensions
     static final String[] EXTENSIONS = new String[]{
         "png", "jpg"
     };
 
-    // filter to identify images based on their extensions
+    // Filter to identify images based on their extensions
     static final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
         @Override
         public boolean accept(final File dir, final String name) {
@@ -86,12 +86,11 @@ public class ImageClient {
 
         // Connects to a Server and send the image over for equalization. Then retrieve image.
         try {
-            LOG.info("Connecting to histogram server: " + histServerName + "on port: " + histServerPort);
+            LOG.info("Connecting to histogram server: " + histServerName + " on port: " + histServerPort);
             Socket socket = new Socket(histServerName, histServerPort);
 
             File[] files = new File(INPUT_DIRECTORY).listFiles(IMAGE_FILTER);
             BufferedImage[] unequalizedImages = new BufferedImage[files.length];
-            BufferedImage[] equalizedImages   = new BufferedImage[files.length];
 
             // Instantiate the array of unequalized images
             LOG.info("Reading " + files.length + " image files from directory:" + INPUT_DIRECTORY);
@@ -105,24 +104,22 @@ public class ImageClient {
 
             // Send images to the Server
             LOG.info("Sending images to histogram server: " + histServerName + " on port: " + histServerPort);
-            for (BufferedImage unequalizedImage : unequalizedImages) {
-                ImageIO.write(unequalizedImage, "PNG", socket.getOutputStream());
+            for (int i = 0; i < unequalizedImages.length; i++) {
+                ImageIO.write(unequalizedImages[i], "PNG", socket.getOutputStream());
             }
 
             // Wait for equalized images from Server
             LOG.info("Waiting for equalized images.");
-            int imageCount = 1;
-            for (BufferedImage equalizedImage : equalizedImages) {
-                LOG.info("Received image " + imageCount + " of " + equalizedImages.length);
-                equalizedImage = ImageIO.read(socket.getInputStream());
+            for (int i = 0; i < unequalizedImages.length; i++) {
+                BufferedImage equalizedImage = ImageIO.read(socket.getInputStream());
+                LOG.info("Received image " + (i+1) + " of " + unequalizedImages.length);
 
-                File file = new File(OUTPUT_DIRECTORY + "/img-" + imageCount + ".png");
+                File file = new File(OUTPUT_DIRECTORY + "/img-" + (i+1) + ".png");
                 if (!file.exists()) {
                     file.createNewFile();
                 }
 
                 ImageIO.write(equalizedImage, "png", file);
-                imageCount++;
             }
         } catch (UnknownHostException e) {
             LOG.fatal("Unknown host", e);

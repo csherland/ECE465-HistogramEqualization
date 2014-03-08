@@ -24,7 +24,7 @@ public class HistogramEqualization {
     }
 
     public static void writeImage(String output) throws IOException {
-        File file = new File(output+".png");
+        File file = new File(output + ".png");
         ImageIO.write(equalized, "png", file);
     }
 

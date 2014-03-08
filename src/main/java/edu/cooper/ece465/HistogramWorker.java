@@ -1,7 +1,7 @@
 /**
  * HistogramWorker.java
  *  A worker runnable that accepts image data over a socket and
- *  performs histogram equalization on incoming data. Returns 
+ *  performs histogram equalization on incoming data. Returns
  *  equalized images over the same socket.
  *
  *  @author Christian Sherland
@@ -27,7 +27,7 @@ public class HistogramWorker implements Runnable {
     private static Log LOG = LogFactory.getLog(HistogramWorker.class);
 
     public HistogramWorker(Socket s) {
-        LOG.info("New histogram worker spawned");
+        LOG.info("New histogram worker spawned.");
         socket = s;
     }
 
@@ -37,32 +37,28 @@ public class HistogramWorker implements Runnable {
             LOG.info("Reading images from client.");
 
             Integer imageCount = (Integer) input.readObject();
+            LOG.info("Expecting " + imageCount + " images from client.");
             BufferedImage[] unequalizedImages = new BufferedImage[imageCount];
-            BufferedImage[] equalizedImages = new BufferedImage[imageCount];
 
-            for (int i = 0; i < unequalizedImages.length; i++) {
-                LOG.info("Received a new image.");
+            for (int i = 0; i < imageCount; i++) {
+                LOG.info("Received image " + i + " from client.");
                 unequalizedImages[i] = ImageIO.read(socket.getInputStream());
             }
 
-            for (int i = 0; i < unequalizedImages.length; i++) {
-                LOG.info("Equalizing image " + (i+1) + " of " + unequalizedImages.length);
-                equalizedImages[i] = HistogramEqualization.computeHistogramEQ(unequalizedImages[i]);
-            }
-
-            for (BufferedImage equalizedImage : equalizedImages) {
-                ImageIO.write(equalizedImage, "PNG", socket.getOutputStream());
+            for (int i = 0; i < imageCount; i++) {
+                LOG.info("Equalizing image " + (i+1) + " of " + imageCount);
+                ImageIO.write(HistogramEqualization.computeHistogramEQ(unequalizedImages[i]), "PNG", socket.getOutputStream());
             }
 
             input.close();
             socket.close();
+            LOG.info("Finished equalizing images.");
         } catch (IOException e) {
             LOG.error("IO Exception", e);
         } catch (ClassNotFoundException e) {
             LOG.error("Class not found error", e);
+        } catch (NullPointerException e) {
+            LOG.error("Null Image", e);
         }
-
-        LOG.info("Finished equalizing images.");
     }
-
 }
