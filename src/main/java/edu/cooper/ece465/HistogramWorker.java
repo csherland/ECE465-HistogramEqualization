@@ -47,7 +47,7 @@ public class HistogramWorker implements Runnable {
 
             for (int i = 0; i < imageCount; i++) {
                 LOG.info("Equalizing image " + (i+1) + " of " + imageCount);
-                ImageIO.write(HistogramEqualization.computeHistogramEQ(unequalizedImages[i]), "PNG", socket.getOutputStream());
+                ImageIO.write(HistogramEqualization.computeHistogramEQ(unequalizedImages[0]), "PNG", socket.getOutputStream());
             }
 
             input.close();
@@ -57,8 +57,8 @@ public class HistogramWorker implements Runnable {
             LOG.error("IO Exception", e);
         } catch (ClassNotFoundException e) {
             LOG.error("Class not found error", e);
-        } catch (NullPointerException e) {
-            LOG.error("Null Image", e);
+        } catch (Exception e) {
+            LOG.error("Unexpected exception:", e);
         }
     }
 }
