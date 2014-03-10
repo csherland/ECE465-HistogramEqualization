@@ -13,13 +13,15 @@
 
 package edu.cooper.ece465;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class HistogramWorker implements Runnable {
 
@@ -39,17 +41,30 @@ public class HistogramWorker implements Runnable {
             Integer imageCount = (Integer) input.readObject();
             LOG.info("Expecting " + imageCount + " images from client.");
             BufferedImage[] unequalizedImages = new BufferedImage[imageCount];
+            BufferedImage[] equalizedImages = new BufferedImage[imageCount];
 
             for (int i = 0; i < imageCount; i++) {
+                SerialBufferedImage receivedImage = (SerialBufferedImage) input.readObject();
+                unequalizedImages[i] = receivedImage.get();
                 LOG.info("Received image " + i + " from client.");
-                unequalizedImages[i] = ImageIO.read(socket.getInputStream());
             }
+
+            LOG.info("Images received.");
 
             for (int i = 0; i < imageCount; i++) {
-                LOG.info("Equalizing image " + (i+1) + " of " + imageCount);
-                ImageIO.write(HistogramEqualization.computeHistogramEQ(unequalizedImages[0]), "PNG", socket.getOutputStream());
+                LOG.info("Equalizing image " + (i + 1) + " of " + imageCount);
+                equalizedImages[i] = HistogramEqualization.computeHistogramEQ(unequalizedImages[i]);
             }
 
+            LOG.info("All images equalized. Now sending images back to client.");
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+
+            for (BufferedImage equalized : equalizedImages) {
+                SerialBufferedImage sendImage = new SerialBufferedImage(equalized);
+                output.writeObject(sendImage);
+            }
+
+            output.close();
             input.close();
             socket.close();
             LOG.info("Finished equalizing images.");

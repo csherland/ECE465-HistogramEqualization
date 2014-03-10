@@ -42,6 +42,6 @@ Project properties (port numbers, img source, etc.) can be changed in the src/ma
 
 Authors
 -------
+- Michael Scibor
 - Christian Sherland
 - Ethan Lusterman
-- Michael Scibor
