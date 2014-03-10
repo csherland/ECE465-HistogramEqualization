@@ -42,8 +42,18 @@ if __name__ == "__main__":
     f = flickr.photos_get_recent()
 
     # Download images
+    i = 1
     for k in f:
+
+        #req  = urllib2.Request(k.getURL(size='Medium', urlType='source'))
+        #resp = urllib2.urlopen(req)
+        #img  = resp.read()
+
         url = k.getURL(size='Medium', urlType='source')
         image = urllib.URLopener()
-        image.retrieve(url, os.path.basename(urlparse.urlparse(url).path))
+        image.retrieve(url, os.path.join(os.path.dirname(__file__), '../'+outputDir+'img'+str(i)+'.png'))
         print 'downloading:', url
+
+        i = i + 1
+        if (i > numImages):
+            break
