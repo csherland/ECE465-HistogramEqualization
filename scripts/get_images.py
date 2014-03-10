@@ -25,12 +25,12 @@ import api_properties
 if __name__ == "__main__":
 
     # Read user specified arguments
-    #if len(sys.argv) is not 2:
-    #    print "Usage Error: ./get_images.py <numImages> <outputDir>"
-    #    sys.exit(1)
+    if len(sys.argv) is not 3:
+        print "Usage Error: ./get_images.py <numImages> <outputDir>"
+        sys.exit(1)
 
-    numImages = sys.argv[0]
-    outputDir = str(sys.argv[1])
+    numImages = sys.argv[1]
+    outputDir = str(sys.argv[2])
 
     # Read in the API key and secret
     # (you will need to get your own and store them in
