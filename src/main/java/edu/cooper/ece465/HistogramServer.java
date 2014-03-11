@@ -1,11 +1,11 @@
 /**
  * HistogramServer.java
- *  An image equalization server. Accepts new socket connections
- *  and performs image equalization on specified data.
+ *  An image equalization server. Accepts new socket connections and performs
+ *  image equalization on specified data.
  *
- *  Command line arguments specify the load balancer host name, the
- *  port on which to connect to the load balancer and the port to
- *  listen for connections from clients.
+ *  Command line arguments specify the load balancer host name, the port on
+ *  which to connect to the load balancer and the port to listen for connections
+ *  from clients.
  *
  *  @author Christian Sherland
  *  @author Ethan Lusterman

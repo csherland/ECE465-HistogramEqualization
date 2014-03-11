@@ -50,7 +50,7 @@ public class ServerListener implements Runnable {
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             ServerStatus status   = (ServerStatus) ois.readObject();
 
-            // If the object is in the queue, remove it (so it is updated on add)
+            // If the server is in the queue, remove it (so it is updated on add)
             String key = status.getKey();
             if (hashMap.containsKey(key)) {
                 queue.remove(hashMap.get(key));
