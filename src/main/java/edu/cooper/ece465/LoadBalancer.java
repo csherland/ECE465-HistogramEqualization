@@ -61,7 +61,7 @@ public class LoadBalancer {
                 ServerStatus bestServer = queue.peek();
                 output.writeObject(bestServer.getHost());
                 output.writeObject(bestServer.getPort());
-                LOG.info("Sending best server :" + bestServer.getHost + ":" + bestServer.getPort());
+                LOG.info("Sending best server :" + bestServer.getHost() + ":" + bestServer.getPort());
 
                 // Close connection to client
                 output.close();

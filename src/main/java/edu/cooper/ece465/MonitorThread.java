@@ -14,7 +14,8 @@ package edu.cooper.ece465;
 
 import java.io.*;
 import java.net.*;
-import java.lang.management.*;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -73,13 +74,11 @@ public class MonitorThread implements Runnable {
 
                 // Clost up connection
                 oos.close();
-                os.close();
-
+                Thread.sleep(seconds*1000);
             } catch (Exception e) {
                 LOG.error("Could not communicate with master server.", e);
             }
 
-            Thread.sleep(seconds*1000);
         }
     }
 }
