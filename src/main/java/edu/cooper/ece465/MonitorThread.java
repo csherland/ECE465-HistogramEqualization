@@ -13,9 +13,9 @@
 
 package edu.cooper.ece465;
 
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.*;
+import java.lang.management.*;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,7 +62,9 @@ public class MonitorThread implements Runnable {
             try {
                 LOG.info("Sending data to load balancer: " + hostname + " on port: " + portNumber);
                 Socket socket = new Socket(InetAddress.getByName(this.hostname), this.portNumber);
-                ServerStatus data = new ServerStatus(socket.getLocalAddress().getHostName(), this.clientPortNumber, 1.0);
+                OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+                double load = osBean.getSystemLoadAverage();
+                ServerStatus data = new ServerStatus(socket.getLocalAddress().getHostName(), this.clientPortNumber, load);
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 oos.writeObject(data);
