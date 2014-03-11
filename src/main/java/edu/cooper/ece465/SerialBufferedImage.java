@@ -1,10 +1,20 @@
+/**
+ * SerialBufferedImage.java
+ *   Because buffered images are not serializable, they cannot be send over object
+ *   streams. This class implements a serializable buffered image to enable that
+ *   functionality.
+ *
+ *  @author Christian Sherland
+ *  @author Ethan Lusterman
+ *  @author Michael Scibore
+ *
+ *  @version 1.0 Mar 10 2014
+ */
+
 package edu.cooper.ece465;
 
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
-
-// BufferedImages are not Serializable, use this to store a BufferedImage as a
-// Serializable object, with appropriate getter and setter methods.
 
 public class SerialBufferedImage implements Serializable {
     private static final long serialVersionUID = 1L;

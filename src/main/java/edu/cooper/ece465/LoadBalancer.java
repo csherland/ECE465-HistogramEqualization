@@ -1,7 +1,7 @@
 /**
  * LoadBalancer.java
- *  Receives requests from Client objects to be connected to an
- *  available Server. Tells the Client which Server is available.
+ *  Receives requests from Client objects to be connected to an available Server.
+ *  Tells the Client which Server is available.
  *
  *  @author Christian Sherland
  *  @author Ethan Lusterman
@@ -35,12 +35,13 @@ public class LoadBalancer {
 
         // Listen for connections from HistogramServers
         PriorityQueue<ServerStatus> queue = new PriorityQueue<ServerStatus>();
-        HashMap<String, ServerStatus> hm = new HashMap<String, ServerStatus>();
+        HashMap<String, ServerStatus> hm  = new HashMap<String, ServerStatus>();
 
+        // Set up listener for info on histogram servers
         try {
             Runnable listener = new ServerListener(queue, hm, SERVER_PORT);
             (new Thread(listener)).start();
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.fatal("Could not create listener", e);
             System.exit(1);
         }
@@ -48,6 +49,7 @@ public class LoadBalancer {
         try {
             // Listen for connections from clients and connect them with the best HistogramServer
             ServerSocket serverSocket = new ServerSocket(CLIENT_PORT);
+
             LOG.info("Listening for new client connections on port: "+ CLIENT_PORT);
             while(true){
 
@@ -55,11 +57,13 @@ public class LoadBalancer {
                 ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
                 LOG.info("New connection from client.");
 
+                // Determine best server to give to client
                 ServerStatus bestServer = queue.peek();
-
                 output.writeObject(bestServer.getHost());
                 output.writeObject(bestServer.getPort());
+                LOG.info("Sending best server :" + bestServer.getHost + ":" + bestServer.getPort());
 
+                // Close connection to client
                 output.close();
                 socket.close();
             }

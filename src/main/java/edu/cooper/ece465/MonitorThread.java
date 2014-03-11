@@ -1,7 +1,7 @@
 /**
  * MonitorThread.java
  *  Responsible for monitoring the state of threads in the
- *  HistogramServer thread pool. Periodically send load information 
+ *  HistogramServer thread pool. Periodically send load information
  *  on performance to the LoadBalancer
  *
  *  @author Christian Sherland
@@ -61,22 +61,26 @@ public class MonitorThread implements Runnable {
             // Talk to master server with current load stats and server status
             try {
                 LOG.info("Sending data to load balancer: " + hostname + " on port: " + portNumber);
-                Socket socket = new Socket(InetAddress.getByName(this.hostname), this.portNumber);
+
+                // Determine current system load
                 OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
                 double load = osBean.getSystemLoadAverage();
+
+                // Send system information to load balancer
+                Socket socket = new Socket(InetAddress.getByName(this.hostname), this.portNumber);
                 ServerStatus data = new ServerStatus(socket.getLocalAddress().getHostName(), this.clientPortNumber, load);
-                OutputStream os = socket.getOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(os);
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream(););
                 oos.writeObject(data);
+
+                // Clost up connection
                 oos.close();
                 os.close();
-                LOG.info("MyMonitor sent data: " + data.toString());
-                Thread.sleep(seconds*1000);
+
             } catch (Exception e) {
                 LOG.error("Could not communicate with master server.", e);
             }
 
+            Thread.sleep(seconds*1000);
         }
     }
 }
-

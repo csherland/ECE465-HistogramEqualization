@@ -50,7 +50,7 @@ public class HistogramServer {
                 TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(WORK_QUEUE_SIZE),
                 threadFactory, rejectionHandler);
 
-        // Start the monitoring thread
+        // Start the monitoring thread (sends information to load balancer)
         MonitorThread monitor = new MonitorThread(executorPool, 3, HOSTNAME, SERVERPORT, CLIENTPORT);
         Thread monitorThread  = new Thread(monitor);
         monitorThread.start();
@@ -63,6 +63,7 @@ public class HistogramServer {
                 Socket socket = serverSocket.accept();
                 LOG.info("Accepted new client connection.");
 
+                // Handle new client connection in a thread
                 executorPool.execute(new HistogramWorker(socket));
             }
         } catch (IOException e) {

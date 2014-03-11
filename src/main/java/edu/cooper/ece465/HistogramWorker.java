@@ -1,8 +1,7 @@
 /**
  * HistogramWorker.java
- *  A worker runnable that accepts image data over a socket and
- *  performs histogram equalization on incoming data. Returns
- *  equalized images over the same socket.
+ *  A worker runnable that accepts image data over a socket and performs histogram
+ *  equalization on incoming data. Returns equalized images over the same socket.
  *
  *  @author Christian Sherland
  *  @author Ethan Lusterman
@@ -35,22 +34,26 @@ public class HistogramWorker implements Runnable {
 
     public void run() {
         try {
+            // Get input data stream
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             LOG.info("Reading images from client.");
 
+            // Determine number of images to accept
             Integer imageCount = (Integer) input.readObject();
             LOG.info("Expecting " + imageCount + " images from client.");
             BufferedImage[] unequalizedImages = new BufferedImage[imageCount];
-            BufferedImage[] equalizedImages = new BufferedImage[imageCount];
+            BufferedImage[] equalizedImages   = new BufferedImage[imageCount];
 
+            // Read in all expected images
             for (int i = 0; i < imageCount; i++) {
                 SerialBufferedImage receivedImage = (SerialBufferedImage) input.readObject();
                 unequalizedImages[i] = receivedImage.get();
                 LOG.info("Received image " + i + " from client.");
             }
 
-            LOG.info("Images received.");
+            LOG.info("All Images received. Performing equalization.");
 
+            // Perform equalization on data
             for (int i = 0; i < imageCount; i++) {
                 LOG.info("Equalizing image " + (i + 1) + " of " + imageCount);
                 equalizedImages[i] = HistogramEqualization.computeHistogramEQ(unequalizedImages[i]);
@@ -59,11 +62,13 @@ public class HistogramWorker implements Runnable {
             LOG.info("All images equalized. Now sending images back to client.");
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
 
+            // Send data back
             for (BufferedImage equalized : equalizedImages) {
                 SerialBufferedImage sendImage = new SerialBufferedImage(equalized);
                 output.writeObject(sendImage);
             }
 
+            // Close up streams/sockets
             output.close();
             input.close();
             socket.close();

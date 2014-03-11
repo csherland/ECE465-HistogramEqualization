@@ -1,7 +1,7 @@
 /**
  * ServerStatus.java
- *  Serializable information about Histogram servers. Allows
- *  load balancer to keep track of connected server info.
+ *  Serializable information about Histogram servers. Allows load balancer to
+ *  keep track of connected server info.
  *
  *  @author Christian Sherland
  *  @author Ethan Lusterman

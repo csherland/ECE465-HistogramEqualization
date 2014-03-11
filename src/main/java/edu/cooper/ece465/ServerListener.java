@@ -33,9 +33,9 @@ public class ServerListener implements Runnable {
 
     public ServerListener(PriorityQueue<ServerStatus> queue, HashMap<String, ServerStatus> hm, int portNumber) throws IOException {
         LOG.info("Creating new server listener.");
-        this.queue = queue;
+        this.queue   = queue;
         this.hashMap = hm;
-        this.port = portNumber;
+        this.port    = portNumber;
         this.serverSocket = new ServerSocket(portNumber);
     }
 
@@ -46,16 +46,21 @@ public class ServerListener implements Runnable {
             Socket socket = serverSocket.accept();
             LOG.info("New connection from histogram server");
 
+            // Get server status
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            ServerStatus status =(ServerStatus) ois.readObject();
+            ServerStatus status   = (ServerStatus) ois.readObject();
 
+            // If the object is in the queue, remove it (so it is updated on add)
             String key = status.getKey();
             if (hashMap.containsKey(key)) {
                 queue.remove(hashMap.get(key));
             }
+
+            // Add key into the hashtable and queue
             hashMap.put(key, status);
             queue.add(status);
 
+            // Close up connection
             ois.close();
             socket.close();
         } catch (ClassNotFoundException e) {

@@ -59,9 +59,9 @@ public class ImageClient {
         final String OUTPUT_DIRECTORY   = args[3];
 
         LOG.info("Image client running with load balancer name:\t " + LOAD_BALANCER_NAME + "\n\t\t port: "
-                                                                  + LOAD_BALANCER_PORT + "\n\t\t input dir: "
-                                                                  + INPUT_DIRECTORY + "\n\t\t output dir: "
-                                                                  + OUTPUT_DIRECTORY);
+                                                                    + LOAD_BALANCER_PORT + "\n\t\t input dir: "
+                                                                    + INPUT_DIRECTORY + "\n\t\t output dir: "
+                                                                    + OUTPUT_DIRECTORY);
 
         String  histServerName = null;
         Integer histServerPort = null;
@@ -80,7 +80,7 @@ public class ImageClient {
             LOG.fatal("Socket failed to initialize.");
             System.exit(1);
         } catch (ClassNotFoundException e) {
-            LOG.error("ClassNotFoundException.", e);
+            LOG.fatal("ClassNotFoundException.", e);
             System.exit(1);
         }
 
@@ -102,7 +102,6 @@ public class ImageClient {
             for (int i = 0; i < files.length; i++) {
                 BufferedImage unequalizedImage = ImageIO.read(files[i]);
                 unequalizedSerial[i] = new SerialBufferedImage(unequalizedImage);
-//                unequalizedImages[i] = (BufferedImage) ImageIO.read(files[i]);
             }
 
             LOG.info("Read all images from directory.");
@@ -115,7 +114,6 @@ public class ImageClient {
             LOG.info("Sending images to histogram server: " + histServerName + " on port: " + histServerPort);
             for (SerialBufferedImage sendImage: unequalizedSerial) {
                 output.writeObject(sendImage);
-//                ImageIO.write(unequalizedImages[i], "PNG", socket.getOutputStream());
             }
 
             // Wait for equalized images from Server
@@ -143,7 +141,7 @@ public class ImageClient {
             LOG.fatal("IO exception", e);
             System.exit(1);
         } catch (Exception e) {
-            LOG.fatal("Unknown exception", e);
+            LOG.fatal("Unexpected exception", e);
             System.exit(1);
         }
 

@@ -2,6 +2,7 @@
  *  HistogramEqualization.java
  *      Used to apply histogram equalization to a specified BufferedImage
  *      Found online at:
+ *        http://forrst.com/posts/Histogram_equalization_algorithm_in_Java-XmL
  */
 
 package edu.cooper.ece465;
