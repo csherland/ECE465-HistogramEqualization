@@ -68,7 +68,7 @@ public class MonitorThread implements Runnable {
                 // Send system information to load balancer
                 Socket socket = new Socket(InetAddress.getByName(this.hostname), this.portNumber);
                 ServerStatus data = new ServerStatus(socket.getLocalAddress().getHostName(), this.clientPortNumber, load);
-                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream(););
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 oos.writeObject(data);
 
                 // Clost up connection
