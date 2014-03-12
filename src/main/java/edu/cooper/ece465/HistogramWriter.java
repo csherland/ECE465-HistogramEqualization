@@ -38,13 +38,14 @@ public class HistogramWriter implements Runnable {
 
     @Override
     public void run() {
-        for(; sentBack < expected; sentBack++) {
+        while(sentBack < expected) {
             try {
                 if(!imgBuffer.isEmpty()) {
                     SerialBufferedImage sendBack = imgBuffer.get(0);
                     imgBuffer.remove(0);
                     output.writeObject(sendBack);
                     LOG.info("Sent back img " + (sentBack+1));
+                    sentBack++;
                 } else {
                     Thread.sleep(1000);
                 }
@@ -54,7 +55,7 @@ public class HistogramWriter implements Runnable {
         }
 
         try {
-            Thread.sleep(10000);
+            Thread.sleep(100000);
         } catch (Exception e) {}
     }
 }
