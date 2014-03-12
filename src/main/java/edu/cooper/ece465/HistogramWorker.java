@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,6 +36,9 @@ public class HistogramWorker implements Runnable {
     public void run() {
         try {
             // Get input data stream
+            ArrayList<SerialBufferedImage> eqImgBuffer = new ArrayList<SerialBufferedImage>();
+            Collections.synchronizedList(eqImgBuffer);
+            //ArrayList<SerialBufferedImage> eqImgBuffer = Collections.synchronizedList(list);
             ObjectInputStream input   = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
             LOG.info("Reading images from client.");
@@ -43,19 +47,25 @@ public class HistogramWorker implements Runnable {
             imageCount = (Integer) input.readObject();
             LOG.info("Expecting " + imageCount + " images from client.");
 
-            Thread imgThreads[] = new Thread[imageCount];
+            // Make the send back thread
+            HistogramWriter writer = new HistogramWriter(eqImgBuffer, output, imageCount);
+            Thread writerThread = new Thread(writer);
+            writerThread.start();
+
+            ArrayList<Thread> imgThreads = new ArrayList<Thread>();
             // Read in all expected images
             for (int i = 0; i < imageCount; i++) {
                 SerialBufferedImage receivedImage = (SerialBufferedImage) input.readObject();
-                LOG.info("Received image " + i + " from client.");
-                Runnable equalizerThread = new HistogramWorkerEQ(output, i, receivedImage.getImage(), receivedImage.getName());
-                imgThreads[i] = new Thread(equalizerThread);
-                imgThreads[i].start();
+                LOG.info("Received image " + (i+1) + " from client.");
+                Runnable equalizerThread = new HistogramWorkerEQ(eqImgBuffer, i+1, receivedImage.getImage(), receivedImage.getName());
+                imgThreads.add(new Thread(equalizerThread));
+                imgThreads.get(i).start();
             }
 
             for (Thread thread : imgThreads) {
                 thread.join();
             }
+            writerThread.join();
 
             socket.close();
             LOG.info("Finished equalizing images.");

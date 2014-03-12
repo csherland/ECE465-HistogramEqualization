@@ -68,7 +68,7 @@ public class ImageWrite implements Runnable {
                 String name = files[i].getName();
                 int pos = name.lastIndexOf(".");
                 if (pos > 0) {
-                        name = name.substring(0, pos);
+                    name = name.substring(0, pos);
                 }
                 SerialBufferedImage uneq = new SerialBufferedImage(unequalizedImage, name);
                 output.writeObject(uneq);
