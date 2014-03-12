@@ -16,19 +16,22 @@
 
 package edu.cooper.ece465;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 public class ImageWrite implements Runnable {
 
     // Array of supported image extensions
     private static final String[] EXTENSIONS = new String[]{
-        "png", "jpg"
+            "png", "jpg"
     };
 
     // Filter to identify images based on their extensions
@@ -49,13 +52,12 @@ public class ImageWrite implements Runnable {
     private String sourceDir;
 
     public ImageWrite(Socket s, String sourceDir) {
-        this.socket    = s;
+        this.socket = s;
         this.sourceDir = sourceDir;
     }
 
     @Override
     public void run() {
-
         try {
             // Send the number of images to be processed to the server
             File[] files = new File(sourceDir).listFiles(IMAGE_FILTER);
@@ -65,8 +67,8 @@ public class ImageWrite implements Runnable {
             LOG.info("Reading " + files.length + " image files from directory:" + sourceDir);
             for (int i = 0; i < files.length; i++) {
                 BufferedImage unequalizedImage = ImageIO.read(files[i]);
-                SerialBufferedImage uneq = new SerialBufferedImage(unequalizedImage);
-                output.writeObject(uneq);
+                SerialBufferedImage unequalizedSerial = new SerialBufferedImage(unequalizedImage);
+                output.writeObject(unequalizedSerial);
             }
             output.close();
         } catch (IOException e) {

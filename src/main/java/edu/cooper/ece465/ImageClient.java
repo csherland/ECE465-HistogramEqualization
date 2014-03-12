@@ -16,19 +16,21 @@
 
 package edu.cooper.ece465;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ImageClient {
 
     // Array of supported image extensions
     static final String[] EXTENSIONS = new String[]{
-        "png", "jpg"
+            "png", "jpg"
     };
 
     // Filter to identify images based on their extensions
@@ -54,16 +56,17 @@ public class ImageClient {
         }
 
         final String LOAD_BALANCER_NAME = args[0];
-        final int LOAD_BALANCER_PORT    = Integer.parseInt(args[1]);
-        final String INPUT_DIRECTORY    = args[2];
-        final String OUTPUT_DIRECTORY   = args[3];
+        final int LOAD_BALANCER_PORT = Integer.parseInt(args[1]);
+        final String INPUT_DIRECTORY = args[2];
+        final String OUTPUT_DIRECTORY = args[3];
 
-        LOG.info("Image client running with load balancer name:\t " + LOAD_BALANCER_NAME + "\n\t\t port: "
-                                                                    + LOAD_BALANCER_PORT + "\n\t\t input dir: "
-                                                                    + INPUT_DIRECTORY + "\n\t\t output dir: "
-                                                                    + OUTPUT_DIRECTORY);
+        LOG.info("Image client running with load balancer name:\t "
+                + LOAD_BALANCER_NAME + "\n\t\t port: "
+                + LOAD_BALANCER_PORT + "\n\t\t input dir: "
+                + INPUT_DIRECTORY + "\n\t\t output dir: "
+                + OUTPUT_DIRECTORY);
 
-        String  histServerName = null;
+        String histServerName = null;
         Integer histServerPort = null;
 
         try {
@@ -71,7 +74,7 @@ public class ImageClient {
             Socket socket = new Socket(LOAD_BALANCER_NAME, LOAD_BALANCER_PORT); // Open a connection to the LoadBalancer
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
-            histServerName = (String)  input.readObject();
+            histServerName = (String) input.readObject();
             histServerPort = (Integer) input.readObject();
 
             input.close();
@@ -94,7 +97,7 @@ public class ImageClient {
             int numImgs = files.length;
 
             Runnable imgWrite = new ImageWrite(socket, INPUT_DIRECTORY);
-            Runnable imgRead  = new ImageRead(socket, OUTPUT_DIRECTORY, numImgs);
+            Runnable imgRead = new ImageRead(socket, OUTPUT_DIRECTORY, numImgs);
             (new Thread(imgWrite)).start();
             (new Thread(imgRead)).start();
 
@@ -109,6 +112,6 @@ public class ImageClient {
             System.exit(1);
         }
 
-        LOG.info("Received all equalized images and saved output to directory: " + OUTPUT_DIRECTORY);
+//        LOG.info("Received all equalized images and saved output to directory: " + OUTPUT_DIRECTORY);
     }
 }
