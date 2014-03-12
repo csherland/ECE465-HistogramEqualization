@@ -65,7 +65,12 @@ public class ImageWrite implements Runnable {
             LOG.info("Reading " + files.length + " image files from directory:" + sourceDir);
             for (int i = 0; i < files.length; i++) {
                 BufferedImage unequalizedImage = ImageIO.read(files[i]);
-                SerialBufferedImage uneq = new SerialBufferedImage(unequalizedImage);
+                String name = files[i].getName();
+                int pos = name.lastIndexOf(".");
+                if (pos > 0) {
+                        name = name.substring(0, pos);
+                }
+                SerialBufferedImage uneq = new SerialBufferedImage(unequalizedImage, name);
                 output.writeObject(uneq);
             }
             output.close();
