@@ -96,11 +96,14 @@ public class ImageClient {
             File[] files = new File(INPUT_DIRECTORY).listFiles(IMAGE_FILTER);
             int numImgs = files.length;
 
-            Runnable imgWrite = new ImageWrite(socket, INPUT_DIRECTORY);
-            Runnable imgRead = new ImageRead(socket, OUTPUT_DIRECTORY, numImgs);
-            (new Thread(imgWrite)).start();
-            (new Thread(imgRead)).start();
+            Thread imgWriteThread = new Thread(new ImageWrite(socket, INPUT_DIRECTORY));
+            Thread imgReadThread  = new Thread(new ImageRead(socket, OUTPUT_DIRECTORY, numImgs));
 
+            imgWriteThread.start();
+            imgReadThread.start();
+
+            imgWriteThread.join();
+            imgReadThread.join();
         } catch (UnknownHostException e) {
             LOG.fatal("Unknown host", e);
             System.exit(1);
@@ -112,6 +115,6 @@ public class ImageClient {
             System.exit(1);
         }
 
-//        LOG.info("Received all equalized images and saved output to directory: " + OUTPUT_DIRECTORY);
+       LOG.info("Received all equalized images and saved output to directory: " + OUTPUT_DIRECTORY);
     }
 }

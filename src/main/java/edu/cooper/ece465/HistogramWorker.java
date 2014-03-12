@@ -35,22 +35,29 @@ public class HistogramWorker implements Runnable {
     public void run() {
         try {
             // Get input data stream
-            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+            ObjectInputStream input   = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
             LOG.info("Reading images from client.");
 
             // Determine number of images to accept
             imageCount = (Integer) input.readObject();
             LOG.info("Expecting " + imageCount + " images from client.");
 
+            Thread imgThreads[] = new Thread[imageCount];
             // Read in all expected images
             for (int i = 0; i < imageCount; i++) {
                 SerialBufferedImage receivedImage = (SerialBufferedImage) input.readObject();
                 LOG.info("Received image " + i + " from client.");
-                Runnable equalizerThread = new HistogramWorkerEQ(socket, i, receivedImage.getImage(), receivedImage.getName());
-                (new Thread(equalizerThread)).start();
+                Runnable equalizerThread = new HistogramWorkerEQ(output, i, receivedImage.getImage(), receivedImage.getName());
+                imgThreads[i] = new Thread(equalizerThread);
+                imgThreads[i].start();
             }
 
-            input.close();
+            for (Thread thread : imgThreads) {
+                thread.join();
+            }
+
+            socket.close();
             LOG.info("Finished equalizing images.");
         } catch (IOException e) {
             LOG.error("IO Exception", e);

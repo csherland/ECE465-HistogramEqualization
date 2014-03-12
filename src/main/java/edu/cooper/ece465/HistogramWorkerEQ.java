@@ -14,27 +14,25 @@ public class HistogramWorkerEQ implements Runnable {
     private int imageNumber;
     private BufferedImage unequalizedImage;
     private String imageName;
+    private ObjectOutputStream output;
     private static Log LOG = LogFactory.getLog(HistogramWorkerEQ.class);
 
-    public HistogramWorkerEQ(Socket socket, int imageNumber, BufferedImage unequalizedImage, String imgName) {
+    public HistogramWorkerEQ(ObjectOutputStream out, int imageNumber, BufferedImage unequalizedImage, String imgName) {
         LOG.info("Thread created to equalize image: " + imageNumber + " of " + HistogramWorker.imageCount);
         this.socket = socket;
         this.imageNumber = imageNumber;
         this.unequalizedImage = unequalizedImage;
         this.imageName = imgName;
+        this.output = out;
     }
 
     @Override
     public void run() {
         try {
-            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
             BufferedImage equalizedImage = HistogramEqualization.computeHistogramEQ(unequalizedImage);
             LOG.info("Image " + imageNumber + " of " + HistogramWorker.imageCount + " equalized successfully.");
 
-            SerialBufferedImage sendImage = new SerialBufferedImage(equalizedImage, imageName);
-            output.writeObject(sendImage);
-
-            output.close();
+            output.writeObject(new SerialBufferedImage(equalizedImage, imageName));
         } catch (IOException e) {
             e.printStackTrace();
         }

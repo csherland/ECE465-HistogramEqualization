@@ -59,7 +59,6 @@ public class ImageRead implements Runnable {
                 ImageIO.write(equalizedImage, "png", file);
             }
 
-            input.close();
         } catch (IOException e) {
             LOG.fatal("IO exception", e);
             System.exit(1);

@@ -73,7 +73,7 @@ public class ImageWrite implements Runnable {
                 SerialBufferedImage uneq = new SerialBufferedImage(unequalizedImage, name);
                 output.writeObject(uneq);
             }
-            output.close();
+
         } catch (IOException e) {
             LOG.fatal("IO exception", e);
             System.exit(1);
