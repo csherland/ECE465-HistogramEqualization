@@ -22,7 +22,7 @@ import os
 import sys
 import api_properties
 
-PROJECT_ROOT = os.path.abspath('..')
+PROJECT_ROOT = os.path.abspath('.')
 REL_IMG_PATH = 'src/main/resources/images-unequalized/'
 
 if __name__ == "__main__":
