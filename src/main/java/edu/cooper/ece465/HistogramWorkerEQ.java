@@ -8,18 +8,20 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class WorkerWrite implements Runnable {
+public class HistogramWorkerEQ implements Runnable {
 
     private Socket socket;
     private int imageNumber;
     private BufferedImage unequalizedImage;
+    private String imageName;
     private static Log LOG = LogFactory.getLog(WorkerWrite.class);
 
-    public WorkerWrite(Socket socket, int imageNumber, BufferedImage unequalizedImage) {
+    public WorkerWrite(Socket socket, int imageNumber, BufferedImage unequalizedImage, String imgName) {
         LOG.info("Thread created to equalize image: " + imageNumber + " of " + HistogramWorker.imageCount);
         this.socket = socket;
         this.imageNumber = imageNumber;
         this.unequalizedImage = unequalizedImage;
+        this.imageName = imgName;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class WorkerWrite implements Runnable {
             BufferedImage equalizedImage = HistogramEqualization.computeHistogramEQ(unequalizedImage);
             LOG.info("Image " + imageNumber + " of " + HistogramWorker.imageCount + " equalized successfully.");
 
-            SerialBufferedImage sendImage = new SerialBufferedImage(equalizedImage);
+            SerialBufferedImage sendImage = new SerialBufferedImage(equalizedImage, imgName);
             output.writeObject(sendImage);
 
             output.close();

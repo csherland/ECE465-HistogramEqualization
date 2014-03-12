@@ -46,12 +46,11 @@ public class HistogramWorker implements Runnable {
             for (int i = 0; i < imageCount; i++) {
                 SerialBufferedImage receivedImage = (SerialBufferedImage) input.readObject();
                 LOG.info("Received image " + i + " from client.");
-                Runnable equalizerThread = new WorkerWrite(socket, i, receivedImage.get());
+                Runnable equalizerThread = new HistogramWorkerEQ(socket, i, receivedImage.getImage(), receivedImage.getName());
                 (new Thread(equalizerThread)).start();
             }
 
             input.close();
-//            socket.close();
             LOG.info("Finished equalizing images.");
         } catch (IOException e) {
             LOG.error("IO Exception", e);

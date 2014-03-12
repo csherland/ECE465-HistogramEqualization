@@ -27,7 +27,6 @@ public class ServerListener implements Runnable {
     private int port;
     private PriorityQueue<ServerStatus> queue;
     private HashMap<String, ServerStatus> hashMap;
-    private Comparator<ServerStatus> loadComparator = new ServerLoadComparator();
     private ServerSocket serverSocket;
     private static Log LOG = LogFactory.getLog(ServerListener.class);
 

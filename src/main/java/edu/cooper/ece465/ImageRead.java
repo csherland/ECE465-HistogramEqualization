@@ -44,10 +44,11 @@ public class ImageRead implements Runnable {
             // Wait for equalized images from Server
             LOG.info("Waiting for equalized images.");
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+
             for (int i = 0; i < numImgs; i++) {
                 SerialBufferedImage receivedImage = (SerialBufferedImage) input.readObject();
                 BufferedImage equalizedImage = receivedImage.getImage();
-                String imageName = receivedImage.getName
+                String imageName = receivedImage.getName();
                 LOG.info("Received image " + (i+1) + " of " + numImgs);
 
                 File file = new File(outputDir + "/"+ imageName +".png");
@@ -57,6 +58,7 @@ public class ImageRead implements Runnable {
 
                 ImageIO.write(equalizedImage, "png", file);
             }
+            
             input.close();
         } catch (IOException e) {
             LOG.fatal("IO exception", e);
