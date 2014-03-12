@@ -14,7 +14,7 @@ package edu.cooper.ece465;
 
 import java.io.Serializable;
 
-public class ServerStatus implements Serializable {
+public class ServerStatus implements Serializable, Comparable<ServerStatus> {
     private String hostName;
     private int portNumber;
     private double serverLoad;
@@ -39,6 +39,17 @@ public class ServerStatus implements Serializable {
 
     public double getLoad() {
         return this.serverLoad;
+    }
+
+    @Override
+    public int compareTo(ServerStatus s) {
+        if (this.getLoad() > s.getLoad()) {
+            return 1;
+        } else if (this.getLoad() == s.getLoad()) {
+            return 0;
+        } else {
+            return -1;
+        }
     }
 
 }
