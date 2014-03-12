@@ -89,51 +89,15 @@ public class ImageClient {
             LOG.info("Connecting to histogram server: " + histServerName + " on port: " + histServerPort);
             Socket socket = new Socket(histServerName, histServerPort);
 
+            //// Send the number of images to be processed to the server
             File[] files = new File(INPUT_DIRECTORY).listFiles(IMAGE_FILTER);
-            for (File file: files){
-                LOG.info(file.getName());
-            }
+            int numImgs = files.length;
 
-            BufferedImage[] unequalizedImages = new BufferedImage[files.length];
-            SerialBufferedImage[] unequalizedSerial = new SerialBufferedImage[files.length];
+            Runnable imgWrite = new ImageWrite(socket, INPUT_DIRECTORY);
+            Runnable imgRead  = new ImageRead(socket, OUTPUT_DIRECTORY, numImgs);
+            (new Thread(imgWrite)).start();
+            (new Thread(imgRead)).start();
 
-            // Instantiate the array of unequalized images
-            LOG.info("Reading " + files.length + " image files from directory:" + INPUT_DIRECTORY);
-            for (int i = 0; i < files.length; i++) {
-                BufferedImage unequalizedImage = ImageIO.read(files[i]);
-                unequalizedSerial[i] = new SerialBufferedImage(unequalizedImage);
-            }
-
-            LOG.info("Read all images from directory.");
-
-            // Send the number of images to be processed to the server
-            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-            output.writeObject(files.length);
-
-            // Send images to the Server
-            LOG.info("Sending images to histogram server: " + histServerName + " on port: " + histServerPort);
-            for (SerialBufferedImage sendImage: unequalizedSerial) {
-                output.writeObject(sendImage);
-            }
-
-            // Wait for equalized images from Server
-            LOG.info("Waiting for equalized images.");
-            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-            for (int i = 0; i < unequalizedImages.length; i++) {
-                SerialBufferedImage receiveImage = (SerialBufferedImage) input.readObject();
-                BufferedImage equalizedImage = receiveImage.get();
-                LOG.info("Received image " + (i+1) + " of " + unequalizedImages.length);
-
-                File file = new File(OUTPUT_DIRECTORY + "/img-" + (i+1) + ".png");
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-
-                ImageIO.write(equalizedImage, "png", file);
-            }
-
-            input.close();
-            output.close();
         } catch (UnknownHostException e) {
             LOG.fatal("Unknown host", e);
             System.exit(1);
