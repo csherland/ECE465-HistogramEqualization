@@ -51,11 +51,11 @@ public class SerialBufferedImage implements Serializable {
         return image;
     }
 
-    public void setName(String name) {}
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void getName() {
+    public String getName() {
         return name;
     }
 
