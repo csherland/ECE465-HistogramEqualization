@@ -22,15 +22,18 @@ import os
 import sys
 import api_properties
 
+PROJECT_ROOT = os.path.abspath('..')
+REL_IMG_PATH = 'src/main/resources/images-unequalized/'
+
 if __name__ == "__main__":
 
     # Read user specified arguments
-    if len(sys.argv) is not 3:
-        print "Usage Error: ./get_images.py <numImages> <outputDir>"
+    if len(sys.argv) is not 2:
+        #print "Usage Error: ./get_images.py <numImages> <outputDir>"
+        print "Usage Error: ./get_images.py <numImages>"
         sys.exit(1)
 
-    numImages = sys.argv[1]
-    outputDir = str(sys.argv[2])
+    numImages = int(sys.argv[1])
 
     # Read in the API key and secret
     # (you will need to get your own and store them in
@@ -45,15 +48,11 @@ if __name__ == "__main__":
     i = 1
     for k in f:
 
-        #req  = urllib2.Request(k.getURL(size='Medium', urlType='source'))
-        #resp = urllib2.urlopen(req)
-        #img  = resp.read()
-
         url = k.getURL(size='Medium', urlType='source')
         image = urllib.URLopener()
-        image.retrieve(url, os.path.join(os.path.dirname(__file__), '../'+outputDir+'img'+str(i)+'.png'))
-        print 'downloading:', url
+        image.retrieve(url, os.path.join(PROJECT_ROOT,REL_IMG_PATH)+'img'+str(i)+'.png')
+        print 'downloading img %s: %s' % (i, url)
 
-        i = i + 1
-        if (i > numImages):
+        i += 1
+        if i > numImages:
             break

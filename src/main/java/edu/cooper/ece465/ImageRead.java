@@ -45,11 +45,12 @@ public class ImageRead implements Runnable {
             LOG.info("Waiting for equalized images.");
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             for (int i = 0; i < numImgs; i++) {
-                SerialBufferedImage receiveImage = (SerialBufferedImage) input.readObject();
-                BufferedImage equalizedImage = receiveImage.get();
+                SerialBufferedImage receivedImage = (SerialBufferedImage) input.readObject();
+                BufferedImage equalizedImage = receivedImage.getImage();
+                String imageName = receivedImage.getName
                 LOG.info("Received image " + (i+1) + " of " + numImgs);
 
-                File file = new File(outputDir + "/img-" + (i+1) + ".png");
+                File file = new File(outputDir + "/"+ imageName +".png");
                 if (!file.exists()) {
                     file.createNewFile();
                 }
